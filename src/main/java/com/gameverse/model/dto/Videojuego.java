@@ -10,6 +10,7 @@ public class Videojuego implements Serializable {
     private int stock;
     private String imagenUrl;
     private String categoria;
+    private Categoria categoriaObjeto;
 
     public Videojuego() {}
 
@@ -37,4 +38,13 @@ public class Videojuego implements Serializable {
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
     public String getCategoria() { return categoria; }
     public void setCategoria(String categoria) { this.categoria = categoria; }
-}
+    // Relación entre el videojuego y su categoría
+  public Categoria getCategoriaObjeto() {
+              return categoriaObjeto;
+          }
+
+  public void setCategoriaObjeto(Categoria categoriaObjeto) {
+              this.categoriaObjeto = categoriaObjeto;
+          }
+
+  }
