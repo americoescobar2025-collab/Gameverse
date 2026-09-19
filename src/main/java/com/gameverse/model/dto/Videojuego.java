@@ -10,6 +10,7 @@ public class Videojuego implements Serializable {
     private int stock;
     private String imagenUrl;
     private String categoria;
+    private Categoria categoriaObjeto;
 
     public Videojuego() {}
 
@@ -22,7 +23,17 @@ public class Videojuego implements Serializable {
         this.imagenUrl = imagenUrl;
         this.categoria = categoria;
     }
-
+    // Constructor que permite trabajar directamente con el objeto Categoria
+    public Videojuego(int id, String titulo, String descripcion, double precio,
+                      int stock, String imagenUrl, Categoria categoriaObjeto) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.stock = stock;
+        this.imagenUrl = imagenUrl;
+        this.categoriaObjeto = categoriaObjeto;
+    }
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getTitulo() { return titulo; }
@@ -37,4 +48,13 @@ public class Videojuego implements Serializable {
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
     public String getCategoria() { return categoria; }
     public void setCategoria(String categoria) { this.categoria = categoria; }
-}
+    // Relación entre el videojuego y su categoría
+  public Categoria getCategoriaObjeto() {
+              return categoriaObjeto;
+          }
+
+  public void setCategoriaObjeto(Categoria categoriaObjeto) {
+              this.categoriaObjeto = categoriaObjeto;
+          }
+
+  }
