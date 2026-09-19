@@ -21,6 +21,7 @@ public class CatalogoServlet extends HttpServlet {
         try {
             List<Videojuego> lista = videojuegoDAO.obtenerTodos();
             request.setAttribute("listaJuegos", lista);
+            request.setAttribute("mensaje", request.getParameter("mensaje"));
             request.getRequestDispatcher("/WEB-INF/views/catalogo.jsp").forward(request, response);
         } catch (SQLException e) {
             request.setAttribute("error", "Error en la base de datos: " + e.getMessage());

@@ -32,4 +32,31 @@ public class VideojuegoDAO {
         }
         return lista;
     }
+
+    /**
+     * Registra un videojuego asociándolo con una categoría existente.
+     * La búsqueda de la categoría no depende de mayúsculas/minúsculas.
+     */
+    public void insertar(Videojuego videojuego) throws SQLException {
+        String sql = "INSERT INTO videojuegos " +
+                "(titulo, descripcion, precio, stock, imagen_url, id_categoria) " +
+                "SELECT ?, ?, ?, ?, ?, c.id_categoria " +
+                "FROM categorias c " +
+                "WHERE LOWER(TRIM(c.nombre)) = LOWER(TRIM(?))";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, videojuego.getTitulo());
+            ps.setString(2, videojuego.getDescripcion());
+            ps.setDouble(3, videojuego.getPrecio());
+            ps.setInt(4, videojuego.getStock());
+            ps.setString(5, videojuego.getImagenUrl().isBlank() ? null : videojuego.getImagenUrl());
+            ps.setString(6, videojuego.getCategoria());
+
+            if (ps.executeUpdate() == 0) {
+                throw new SQLException("La categoría indicada no existe en la base de datos.");
+            }
+        }
+    }
 }

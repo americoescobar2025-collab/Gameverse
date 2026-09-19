@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -50,6 +51,16 @@
             padding: 30px;
             text-align: center;
             color: #cbd5e1;
+        }
+
+        .mensaje-exito {
+            background: #143524;
+            border: 1px solid #166534;
+            border-radius: 10px;
+            color: #bbf7d0;
+            padding: 14px;
+            margin-bottom: 25px;
+            text-align: center;
         }
 
         .catalogo {
@@ -185,6 +196,12 @@
         <p>Explora los videojuegos disponibles en Gameverse</p>
     </div>
 
+    <c:if test="${not empty mensaje}">
+        <div class="mensaje-exito">
+            ✅ <c:out value="${mensaje}" />
+        </div>
+    </c:if>
+
     <c:choose>
 
         <c:when test="${empty listaJuegos}">
@@ -228,14 +245,18 @@
 
                         <div class="contenido">
 
-                            <h2>${juego.titulo}</h2>
+                        <h2><c:out value="${juego.titulo}" /></h2>
 
                             <p class="descripcion">
-                                ${juego.descripcion}
+                                <c:out value="${juego.descripcion}" />
                             </p>
 
                             <p class="dato precio">
-                                Precio: $${juego.precio}
+                                Precio: <fmt:formatNumber value="${juego.precio}"
+                                                          type="currency"
+                                                          currencySymbol="$"
+                                                          minFractionDigits="2"
+                                                          maxFractionDigits="2" />
                             </p>
 
                             <p class="dato stock">
@@ -245,7 +266,7 @@
                             <c:if test="${not empty juego.categoria}">
 
                                 <span class="categoria">
-                                    ${juego.categoria}
+                                    <c:out value="${juego.categoria}" />
                                 </span>
 
                             </c:if>
@@ -269,9 +290,9 @@
             ← Volver al inicio
         </a>
 
-        <span class="nuevo">
+        <a class="nuevo" href="${pageContext.request.contextPath}/videojuegos">
             + Registrar videojuego
-        </span>
+        </a>
 
     </div>
 
