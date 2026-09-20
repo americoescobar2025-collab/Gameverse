@@ -12,7 +12,7 @@ La aplicación utiliza Java como lenguaje principal, JSP para la presentación d
 
 ## Tecnologías utilizadas
 
-- Java JDK 21
+- Java JDK 25
 - IntelliJ IDEA
 - Apache Tomcat 10.1.59
 - Smart Tomcat
@@ -34,7 +34,7 @@ La aplicación utiliza Java como lenguaje principal, JSP para la presentación d
 
 Para ejecutar correctamente el proyecto se requiere:
 
-- JDK 21 instalado.
+- JDK 25 instalado.
 - IntelliJ IDEA.
 - Apache Tomcat 10.1.x.
 - Smart Tomcat para la ejecución desde IntelliJ IDEA.
@@ -49,7 +49,7 @@ También se requiere conexión a Internet para descargar las dependencias admini
 
 ## Configuración del proyecto
 
-El proyecto utiliza **Java JDK 21** como versión del lenguaje.
+El proyecto utiliza **Java JDK 25** como versión del lenguaje.
 
 Las dependencias del proyecto son administradas mediante **Apache Maven** y se encuentran configuradas en el archivo:
 
@@ -218,7 +218,7 @@ Ejecución del proyecto
 
 Para ejecutar Gameverse correctamente:
 
-Instalar JDK 21.
+Instalar JDK 25.
 Instalar IntelliJ IDEA.
 Instalar y configurar MySQL Server.
 Crear la base de datos gameverse_db.
@@ -271,7 +271,7 @@ Estado actual del proyecto
 
 El proyecto cuenta actualmente con:
 
-Configuración de JDK 21.
+Configuración de JDK 25.
 Configuración de IntelliJ IDEA.
 Configuración de Apache Tomcat 10.1.59.
 Configuración de Smart Tomcat.
