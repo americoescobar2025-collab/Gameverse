@@ -73,9 +73,9 @@ El modelo contiene las clases que representan y gestionan los datos de la aplica
 
 model/
 ├── dto/
-│   └── Videojuego.java
+│ └── Videojuego.java
 └── dao/
-    └── VideojuegoDAO.java
+└── VideojuegoDAO.java
 Vista
 
 Las vistas utilizan JSP (JavaServer Pages) para presentar la información al usuario.
@@ -83,9 +83,9 @@ Las vistas utilizan JSP (JavaServer Pages) para presentar la información al usu
 src/main/webapp/
 ├── index.jsp
 └── WEB-INF/
-    └── views/
-        ├── catalogo.jsp
-        └── error.jsp
+└── views/
+├── catalogo.jsp
+└── error.jsp
 Controlador
 
 Los controladores utilizan Servlets para recibir las solicitudes del usuario, procesarlas y comunicarse con el modelo.
@@ -120,37 +120,37 @@ Gameverse/
 ├── pom.xml
 │
 └── src/
-    └── main/
-        │
-        ├── java/
-        │   ├── com/
-        │   │   └── gameverse/
-        │   │       ├── config/
-        │   │       │   └── DatabaseConfig.java
-        │   │       │
-        │   │       ├── controller/
-        │   │       │   └── CatalogoServlet.java
-        │   │       │
-        │   │       └── model/
-        │   │           ├── dao/
-        │   │           │   └── VideojuegoDAO.java
-        │   │           │
-        │   │           └── dto/
-        │   │               └── Videojuego.java
-        │   │
-        │   └── filter/
-        │       └── UTF8Filter.java
-        │
-        ├── resources/
-        │   └── db.properties
-        │
-        └── webapp/
-            ├── index.jsp
-            │
-            └── WEB-INF/
-                └── views/
-                    ├── catalogo.jsp
-                    └── error.jsp
+└── main/
+│
+├── java/
+│ ├── com/
+│ │ └── gameverse/
+│ │ ├── config/
+│ │ │ └── DatabaseConfig.java
+│ │ │
+│ │ ├── controller/
+│ │ │ └── CatalogoServlet.java
+│ │ │
+│ │ └── model/
+│ │ ├── dao/
+│ │ │ └── VideojuegoDAO.java
+│ │ │
+│ │ └── dto/
+│ │ └── Videojuego.java
+│ │
+│ └── filter/
+│ └── UTF8Filter.java
+│
+├── resources/
+│ └── db.properties
+│
+└── webapp/
+├── index.jsp
+│
+└── WEB-INF/
+└── views/
+├── catalogo.jsp
+└── error.jsp
 Base de datos
 
 El proyecto utiliza MySQL como sistema gestor de base de datos.
@@ -184,17 +184,17 @@ El catálogo de videojuegos funciona mediante la comunicación entre el controla
 El flujo principal es:
 
 Usuario
-   ↓
+↓
 CatalogoServlet
-   ↓
+↓
 VideojuegoDAO
-   ↓
+↓
 Base de datos MySQL
-   ↓
+↓
 Videojuego
-   ↓
+↓
 catalogo.jsp
-   ↓
+↓
 Usuario
 
 El CatalogoServlet recibe la solicitud del usuario y solicita los datos al VideojuegoDAO.
