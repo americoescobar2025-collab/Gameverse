@@ -12,7 +12,7 @@ La aplicación utiliza Java como lenguaje principal, JSP para la presentación d
 
 ## Tecnologías utilizadas
 
-- Java JDK 21
+- Java JDK 25
 - IntelliJ IDEA
 - Apache Tomcat 10.1.59
 - Smart Tomcat
@@ -34,7 +34,7 @@ La aplicación utiliza Java como lenguaje principal, JSP para la presentación d
 
 Para ejecutar correctamente el proyecto se requiere:
 
-- JDK 21 instalado.
+- JDK 25 instalado.
 - IntelliJ IDEA.
 - Apache Tomcat 10.1.x.
 - Smart Tomcat para la ejecución desde IntelliJ IDEA.
@@ -49,12 +49,20 @@ También se requiere conexión a Internet para descargar las dependencias admini
 
 ## Configuración del proyecto
 
-El proyecto utiliza **Java JDK 21** como versión del lenguaje.
+El proyecto utiliza **Java JDK 25** como versión del lenguaje.
 
 Las dependencias del proyecto son administradas mediante **Apache Maven** y se encuentran configuradas en el archivo:
 
 ```text
 pom.xml
+```
+
+Para generar el archivo WAR del proyecto, ejecuta:
+
+```bash
+mvn clean package
+```
+
 Arquitectura del proyecto
 
 Gameverse utiliza el patrón de arquitectura Modelo-Vista-Controlador (MVC) para organizar los diferentes componentes del sistema.
@@ -65,9 +73,9 @@ El modelo contiene las clases que representan y gestionan los datos de la aplica
 
 model/
 ├── dto/
-│   └── Videojuego.java
+│ └── Videojuego.java
 └── dao/
-    └── VideojuegoDAO.java
+└── VideojuegoDAO.java
 Vista
 
 Las vistas utilizan JSP (JavaServer Pages) para presentar la información al usuario.
@@ -75,9 +83,9 @@ Las vistas utilizan JSP (JavaServer Pages) para presentar la información al usu
 src/main/webapp/
 ├── index.jsp
 └── WEB-INF/
-    └── views/
-        ├── catalogo.jsp
-        └── error.jsp
+└── views/
+├── catalogo.jsp
+└── error.jsp
 Controlador
 
 Los controladores utilizan Servlets para recibir las solicitudes del usuario, procesarlas y comunicarse con el modelo.
@@ -112,37 +120,37 @@ Gameverse/
 ├── pom.xml
 │
 └── src/
-    └── main/
-        │
-        ├── java/
-        │   ├── com/
-        │   │   └── gameverse/
-        │   │       ├── config/
-        │   │       │   └── DatabaseConfig.java
-        │   │       │
-        │   │       ├── controller/
-        │   │       │   └── CatalogoServlet.java
-        │   │       │
-        │   │       └── model/
-        │   │           ├── dao/
-        │   │           │   └── VideojuegoDAO.java
-        │   │           │
-        │   │           └── dto/
-        │   │               └── Videojuego.java
-        │   │
-        │   └── filter/
-        │       └── UTF8Filter.java
-        │
-        ├── resources/
-        │   └── db.properties
-        │
-        └── webapp/
-            ├── index.jsp
-            │
-            └── WEB-INF/
-                └── views/
-                    ├── catalogo.jsp
-                    └── error.jsp
+└── main/
+│
+├── java/
+│ ├── com/
+│ │ └── gameverse/
+│ │ ├── config/
+│ │ │ └── DatabaseConfig.java
+│ │ │
+│ │ ├── controller/
+│ │ │ └── CatalogoServlet.java
+│ │ │
+│ │ └── model/
+│ │ ├── dao/
+│ │ │ └── VideojuegoDAO.java
+│ │ │
+│ │ └── dto/
+│ │ └── Videojuego.java
+│ │
+│ └── filter/
+│ └── UTF8Filter.java
+│
+├── resources/
+│ └── db.properties
+│
+└── webapp/
+├── index.jsp
+│
+└── WEB-INF/
+└── views/
+├── catalogo.jsp
+└── error.jsp
 Base de datos
 
 El proyecto utiliza MySQL como sistema gestor de base de datos.
@@ -176,17 +184,17 @@ El catálogo de videojuegos funciona mediante la comunicación entre el controla
 El flujo principal es:
 
 Usuario
-   ↓
+↓
 CatalogoServlet
-   ↓
+↓
 VideojuegoDAO
-   ↓
+↓
 Base de datos MySQL
-   ↓
+↓
 Videojuego
-   ↓
+↓
 catalogo.jsp
-   ↓
+↓
 Usuario
 
 El CatalogoServlet recibe la solicitud del usuario y solicita los datos al VideojuegoDAO.
@@ -210,7 +218,7 @@ Ejecución del proyecto
 
 Para ejecutar Gameverse correctamente:
 
-Instalar JDK 21.
+Instalar JDK 25.
 Instalar IntelliJ IDEA.
 Instalar y configurar MySQL Server.
 Crear la base de datos gameverse_db.
@@ -263,7 +271,7 @@ Estado actual del proyecto
 
 El proyecto cuenta actualmente con:
 
-Configuración de JDK 21.
+Configuración de JDK 25.
 Configuración de IntelliJ IDEA.
 Configuración de Apache Tomcat 10.1.59.
 Configuración de Smart Tomcat.
