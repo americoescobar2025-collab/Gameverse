@@ -55,6 +55,14 @@ Las dependencias del proyecto son administradas mediante **Apache Maven** y se e
 
 ```text
 pom.xml
+```
+
+Para generar el archivo WAR del proyecto, ejecuta:
+
+```bash
+mvn clean package
+```
+
 Arquitectura del proyecto
 
 Gameverse utiliza el patrón de arquitectura Modelo-Vista-Controlador (MVC) para organizar los diferentes componentes del sistema.
