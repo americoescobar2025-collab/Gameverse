@@ -47,12 +47,11 @@ El Product Backlog se actualiza para reflejar las actividades necesarias para de
 | ID | Tarea / componente | Responsable | Estado |
 |---|---|---|---|
 | PB-07 | Correcciones, preparación del proyecto y definición del incremento de Inventario | Alcyr Alexander Figueroa Landaverde | En proceso |
-| PB-08 | Persistencia con JPA/Hibernate y mapeo de entidades | Por asignar | Pendiente |
+| PB-08 | Persistencia con JPA/Hibernate y mapeo de entidades | Rebeca Sarai Flores de Tejada | Pendiente |
 | PB-09 | Managed Beans y lógica de negocio | Edwin Vladimir Rivera Cubias | Pendiente |
-| PB-10 | Interfaz JSF y componentes del módulo de Inventario | Eduardo E. Amaya | Pendiente |
+| PB-10 | Interfaz JSF y componentes del módulo de Inventario | Eduardo Ezequiel Amaya Montano | Pendiente |
 | PB-11 | AJAX, validadores y converters | Americo Gabriel Escobar Alvarenga | Pendiente |
-| PB-12 | Pruebas, integración, control de versiones y documentación | Por asignar | Pendiente |
-
+| PB-12 | Pruebas, integración, control de versiones y documentación | Henry Beisson Chacon Garcia | Pendiente |
 ### 5. Cambios y evolución previstos para el Sprint II
 
 A partir de la revisión del incremento desarrollado en la Fase 1, se establece la evolución del proyecto para el Sprint II.
