@@ -57,6 +57,13 @@
             <version>9.4.0</version>
         </dependency>
 
+        <!-- Hibernate ORM / JPA -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.6.58.Final</version>
+        </dependency>
+
     </dependencies>
 
     <build>
