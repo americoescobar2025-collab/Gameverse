@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Gameverse - Gestión de Videojuegos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .mensaje-error { color: red; font-size: 0.9em; margin-left: 5px; }
+        .mensaje-exito { color: green; font-weight: bold; margin-bottom: 10px; }
+        .grid-form { margin-bottom: 20px; }
+        .tabla { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        .tabla th, .tabla td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .tabla th { background-color: #f4f4f4; }
+    </style>
+</h:head>
+<h:body>
+    <h2>Módulo Empresarial Gameverse - Sprint II (Parte 5)</h2>
+
+    <h:form id="formVideojuego">
+        <h:messages id="mensajesGlobales" globalOnly="true" infoClass="mensaje-exito" errorClass="mensaje-error" />
+
+        <h:panelGrid columns="3" styleClass="grid-form">
+            <h:outputLabel for="titulo" value="Título del Videojuego:" />
+            <h:inputText id="titulo" value="#{videojuegoBean.videojuego.titulo}" required="true"
+                         requiredMessage="El título es obligatorio.">
+                <f:ajax event="blur" render="msgTitulo" />
+            </h:inputText>
+            <h:message id="msgTitulo" for="titulo" styleClass="mensaje-error" />
+
+            <h:outputLabel for="precio" value="Precio ($):" />
+            <h:inputText id="precio" value="#{videojuegoBean.videojuego.precio}">
+                <f:validator validatorId="precioJuegoValidator" />
+                <f:ajax event="blur" render="msgPrecio" />
+            </h:inputText>
+            <h:message id="msgPrecio" for="precio" styleClass="mensaje-error" />
+
+            <h:outputLabel for="categoria" value="Categoría:" />
+            <h:selectOneMenu id="categoria" value="#{videojuegoBean.videojuego.categoriaObjeto}"
+                             converter="categoriaConverter" required="true"
+                             requiredMessage="Debe seleccionar una categoría.">
+                <f:selectItem itemLabel="-- Seleccionar --" itemValue="#{null}" />
+                <f:selectItems value="#{videojuegoBean.listaCategorias}" var="cat"
+                               itemLabel="#{cat.nombre}" itemValue="#{cat}" />
+            </h:selectOneMenu>
+            <h:message for="categoria" styleClass="mensaje-error" />
+        </h:panelGrid>
+
+        <h:commandButton value="Guardar Videojuego" action="#{videojuegoBean.guardar}">
+            <f:ajax execute="@form" render="formVideojuego tablaVideojuegos" />
+        </h:commandButton>
+    </h:form>
+
+    <hr/>
+
+    <h3>Catálogo Actualizado</h3>
+    <h:dataTable id="tablaVideojuegos" value="#{videojuegoBean.listaVideojuegos}" var="juego" styleClass="tabla">
+        <h:column>
+            <f:facet name="header">ID</f:facet>
+            #{juego.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Título</f:facet>
+            #{juego.titulo}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Precio</f:facet>
+            $#{juego.precio}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Categoría</f:facet>
+            #{juego.categoria}
+        </h:column>
+    </h:dataTable>
+</h:body>
+</html>
