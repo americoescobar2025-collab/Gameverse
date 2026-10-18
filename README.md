@@ -22,6 +22,8 @@ La aplicación utiliza Java como lenguaje principal, JSP para la presentación d
 - MySQL Connector/J
 - Jakarta Servlet
 - Jakarta JSP
+- Jakarta Faces (JSF)
+- CDI (Weld)
 - JSTL
 - HTML
 - CSS
@@ -89,6 +91,10 @@ src/main/webapp/
 Controlador
 
 Los controladores utilizan Servlets para recibir las solicitudes del usuario, procesarlas y comunicarse con el modelo.
+
+El módulo de Inventario de Fase 2 incorpora un controlador JSF (`InventarioBean`) y una capa de negocio (`InventoryService`). Su acceso a datos depende de `InventoryRepository`, de modo que la implementación JDBC actual puede sustituirse por JPA/Hibernate cuando esa integración sea aprobada.
+
+El controlador permite listar, registrar, editar y eliminar videojuegos, además de ajustar el stock sin permitir valores negativos. La vista JSF del módulo corresponde a la Persona 4 y todavía no forma parte de esta entrega.
 
 controller/
 └── CatalogoServlet.java
@@ -245,6 +251,9 @@ Jakarta Servlet API
 Jakarta JSP API
 JSTL
 MySQL Connector/J
+Jakarta Faces
+Weld CDI
+JUnit Jupiter (pruebas)
 
 La configuración de estas dependencias se encuentra en:
 
