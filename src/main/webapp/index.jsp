@@ -154,6 +154,7 @@
     <nav>
         <a href="${pageContext.request.contextPath}/">Inicio</a>
         <a href="${pageContext.request.contextPath}/catalogo">Catálogo</a>
+        <a href="${pageContext.request.contextPath}/inventario.xhtml">Inventario</a>
     </nav>
 
 </header>
@@ -221,8 +222,8 @@
             Control y administración del inventario.
         </p>
 
-        <a href="#">
-            Próximamente
+        <a href="${pageContext.request.contextPath}/inventario.xhtml">
+            Abrir inventario →
         </a>
 
     </div>

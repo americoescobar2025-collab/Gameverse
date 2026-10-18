@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Gameverse - Inventario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111827;
+            color: #f9fafb;
+            min-height: 100vh;
+        }
+
+        .barra-navegacion {
+            background: #1f2937;
+            padding: 18px clamp(20px, 6vw, 60px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .marca {
+            font-size: 28px;
+            font-weight: bold;
+            color: #60a5fa;
+            white-space: nowrap;
+        }
+
+        .marca span {
+            color: #ffffff;
+        }
+
+        .barra-navegacion nav {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+
+        .barra-navegacion a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .barra-navegacion a:hover,
+        .barra-navegacion a.activo {
+            color: #60a5fa;
+        }
+
+        .contenido {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 44px 0 64px;
+        }
+
+        .encabezado-pagina {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: #93c5fd;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        h1,
+        h2,
+        p {
+            margin-top: 0;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: clamp(32px, 5vw, 48px);
+            line-height: 1.1;
+        }
+
+        h2 {
+            margin-bottom: 6px;
+            font-size: 22px;
+        }
+
+        .subtitulo,
+        .texto-ayuda {
+            color: #d1d5db;
+        }
+
+        .subtitulo {
+            margin-bottom: 0;
+            font-size: 17px;
+        }
+
+        .insignia {
+            padding: 8px 13px;
+            border: 1px solid #3b82f6;
+            border-radius: 999px;
+            color: #bfdbfe;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .tarjeta,
+        .panel {
+            border: 1px solid #374151;
+            border-radius: 16px;
+            background: #1f2937;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+        }
+
+        .tarjeta {
+            padding: 24px;
+        }
+
+        .encabezado-tarjeta,
+        .encabezado-editor {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .texto-ayuda {
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        .acciones-superiores,
+        .acciones-fila,
+        .acciones-editor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            align-items: center;
+        }
+
+        .acciones-superiores {
+            justify-content: space-between;
+            margin: 22px 0;
+            padding: 16px;
+            border: 1px solid #374151;
+            border-radius: 12px;
+            background: #111827;
+        }
+
+        .grupo-busqueda {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1 1 280px;
+            justify-content: flex-end;
+        }
+
+        .grupo-busqueda label {
+            color: #d1d5db;
+            font-weight: bold;
+        }
+
+        .boton {
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .boton:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .boton-secundario {
+            background: #475569;
+        }
+
+        .boton-secundario:hover {
+            background: #64748b;
+        }
+
+        .boton-peligro {
+            background: #dc2626;
+        }
+
+        .boton-peligro:hover {
+            background: #b91c1c;
+        }
+
+        .boton-stock {
+            background: #0f766e;
+        }
+
+        .boton-stock:hover {
+            background: #0d9488;
+        }
+
+        .campo-busqueda,
+        .campo-formulario {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            background: #111827;
+            color: #f9fafb;
+            font: inherit;
+        }
+
+        .campo-busqueda {
+            max-width: 340px;
+        }
+
+        .campo-busqueda:focus,
+        .campo-formulario:focus {
+            outline: 2px solid #60a5fa;
+            outline-offset: 1px;
+            border-color: #60a5fa;
+        }
+
+        .tabla-wrapper {
+            overflow-x: auto;
+            border: 1px solid #374151;
+            border-radius: 12px;
+        }
+
+        .tabla-inventario {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 760px;
+            background: #1f2937;
+        }
+
+        .tabla-inventario th,
+        .tabla-inventario td {
+            padding: 14px 13px;
+            border-bottom: 1px solid #374151;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .tabla-inventario th {
+            background: #374151;
+            color: #dbeafe;
+            font-size: 13px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .tabla-inventario tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .tabla-inventario tr:hover td {
+            background: #263548;
+        }
+
+        .acciones-fila {
+            min-width: 360px;
+        }
+
+        .panel {
+            margin-top: 28px;
+            padding: 26px;
+        }
+
+        .encabezado-editor {
+            margin-bottom: 16px;
+        }
+
+        .form-grid {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 13px;
+        }
+
+        .form-grid td {
+            padding-right: 18px;
+            vertical-align: top;
+        }
+
+        .form-grid td:first-child {
+            width: 190px;
+            padding-top: 10px;
+            color: #d1d5db;
+            font-weight: bold;
+        }
+
+        .form-grid td:last-child {
+            width: 100%;
+        }
+
+        .acciones-editor {
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+
+        .mensajes {
+            margin: 0 0 18px;
+        }
+
+        .mensajes ul {
+            margin: 0;
+            padding: 12px 16px 12px 34px;
+            border-radius: 8px;
+            background: #172554;
+            color: #dbeafe;
+        }
+
+        .mensaje-error {
+            color: #fecaca;
+        }
+
+        .mensaje-exito {
+            color: #bbf7d0;
+        }
+
+        .vacio {
+            margin-top: 18px;
+            padding: 30px 18px;
+            border: 1px dashed #64748b;
+            border-radius: 12px;
+            color: #cbd5e1;
+            text-align: center;
+        }
+
+        .pie-pagina {
+            padding: 20px;
+            background: #0f172a;
+            color: #9ca3af;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 720px) {
+            .barra-navegacion,
+            .encabezado-pagina,
+            .encabezado-tarjeta,
+            .encabezado-editor {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .barra-navegacion nav {
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .acciones-superiores {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .grupo-busqueda {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .campo-busqueda {
+                max-width: none;
+            }
+
+            .form-grid,
+            .form-grid tbody,
+            .form-grid tr,
+            .form-grid td {
+                display: block;
+                width: 100%;
+            }
+
+            .form-grid td:first-child {
+                padding: 0 0 6px;
+            }
+
+            .form-grid td {
+                padding-right: 0;
+            }
+        }
+    </style>
+
+    <script type="text/javascript">
+        function filtrarInventario(valor) {
+            const filtro = valor.toLowerCase().trim();
+            const filas = document.querySelectorAll('table.tabla-inventario tbody tr');
+
+            filas.forEach(function (fila) {
+                const contenido = fila.textContent.toLowerCase();
+                fila.style.display = contenido.includes(filtro) ? '' : 'none';
+            });
+        }
+    </script>
+</h:head>
+
+<h:body>
+    <div class="barra-navegacion">
+        <div class="marca">🎮 Game<span>verse</span></div>
+        <nav aria-label="Navegación principal">
+            <h:outputLink value="#{request.contextPath}/">Inicio</h:outputLink>
+            <h:outputLink value="#{request.contextPath}/catalogo">Catálogo</h:outputLink>
+            <h:outputLink styleClass="activo"
+                          value="#{request.contextPath}/inventario.xhtml">Inventario</h:outputLink>
+        </nav>
+    </div>
+
+    <main class="contenido">
+        <div class="encabezado-pagina">
+            <div>
+                <p class="eyebrow">Gestión del sistema</p>
+                <h1>Inventario de videojuegos</h1>
+                <p class="subtitulo">Administra existencias, precios y datos de tus videojuegos.</p>
+            </div>
+            <span class="insignia">Fase 2 · JSF</span>
+        </div>
+
+        <h:form id="formInventario">
+        <h:messages id="mensajes"
+                    globalOnly="true"
+                    showDetail="true"
+                    infoClass="mensaje-exito"
+                    errorClass="mensaje-error"
+                    styleClass="mensajes"/>
+
+        <section class="tarjeta" aria-label="Listado de inventario">
+            <div class="encabezado-tarjeta">
+                <div>
+                    <p class="eyebrow">Catálogo disponible</p>
+                    <h2>Videojuegos registrados</h2>
+                    <p class="texto-ayuda">Consulta y actualiza rápidamente el stock del catálogo.</p>
+                </div>
+            </div>
+
+            <div class="acciones-superiores">
+                <div class="acciones-fila">
+                    <h:commandButton value="Actualizar listado"
+                                     styleClass="boton boton-secundario"
+                                     action="#{inventarioBean.cargarInventario}">
+                        <f:ajax execute="@this"
+                                render="tabla estadoVacio mensajes"/>
+                    </h:commandButton>
+
+                    <h:commandButton value="+ Nuevo videojuego"
+                                     styleClass="boton"
+                                     action="#{inventarioBean.prepararNuevo}">
+                        <f:ajax execute="@this"
+                                render="editor mensajes"/>
+                    </h:commandButton>
+                </div>
+
+                <div class="grupo-busqueda">
+                    <label for="busqueda">Buscar</label>
+                    <input id="busqueda"
+                           class="campo-busqueda"
+                           type="search"
+                           placeholder="Título, categoría o stock"
+                           onkeyup="filtrarInventario(this.value)"/>
+                </div>
+            </div>
+
+            <h:panelGroup id="estadoVacio"
+                          layout="block"
+                          styleClass="vacio"
+                          rendered="#{empty inventarioBean.videojuegos}">
+                No hay videojuegos registrados en el inventario.
+            </h:panelGroup>
+
+            <div class="tabla-wrapper">
+                <h:dataTable id="tabla"
+                             value="#{inventarioBean.videojuegos}"
+                             var="juego"
+                             rendered="#{not empty inventarioBean.videojuegos}"
+                             styleClass="tabla-inventario">
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                <h:outputText value="#{juego.id}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Título</f:facet>
+                <h:outputText value="#{juego.titulo}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Categoría</f:facet>
+                <h:outputText value="#{juego.categoria}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Precio</f:facet>
+                <h:outputText value="#{juego.precio}">
+                    <f:convertNumber type="currency" currencySymbol="$"/>
+                </h:outputText>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Stock</f:facet>
+                <h:outputText value="#{juego.stock}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Acciones</f:facet>
+                <div class="acciones-fila">
+                    <h:commandButton value="Ver / editar"
+                                     styleClass="boton"
+                                     action="#{inventarioBean.prepararEdicion(juego.id)}">
+                        <f:ajax execute="@this"
+                                render="editor mensajes"/>
+                    </h:commandButton>
+
+                    <h:commandButton value="+1 stock"
+                                     styleClass="boton boton-stock"
+                                     action="#{inventarioBean.ajustarStock(juego.id, 1)}">
+                        <f:ajax execute="@this"
+                                render="tabla estadoVacio mensajes"/>
+                    </h:commandButton>
+
+                    <h:commandButton value="-1 stock"
+                                     styleClass="boton boton-stock"
+                                     action="#{inventarioBean.ajustarStock(juego.id, -1)}">
+                        <f:ajax execute="@this"
+                                render="tabla estadoVacio mensajes"/>
+                    </h:commandButton>
+
+                    <h:commandButton value="Eliminar"
+                                     styleClass="boton boton-peligro"
+                                     onclick="return confirm('¿Eliminar este videojuego?');"
+                                     action="#{inventarioBean.eliminar(juego.id)}">
+                        <f:ajax execute="@this"
+                                render="tabla estadoVacio mensajes"/>
+                    </h:commandButton>
+                </div>
+            </h:column>
+                </h:dataTable>
+            </div>
+        </section>
+
+        <h:panelGroup id="editor"
+                      layout="block"
+                      styleClass="panel">
+            <div class="encabezado-editor">
+                <div>
+                    <p class="eyebrow">Formulario JSF</p>
+                    <h2>Detalle y edición</h2>
+                    <p class="texto-ayuda">Completa los datos y guarda los cambios del videojuego.</p>
+                </div>
+                <span class="insignia">CRUD</span>
+            </div>
+
+            <h:panelGrid columns="2" styleClass="form-grid">
+                <h:outputLabel for="titulo" value="Título:"/>
+                <h:inputText id="titulo"
+                             styleClass="campo-formulario"
+                             value="#{inventarioBean.videojuego.titulo}"
+                             required="true"
+                             requiredMessage="El título es obligatorio."/>
+
+                <h:outputLabel for="descripcion" value="Descripción:"/>
+                <h:inputTextarea id="descripcion"
+                                 styleClass="campo-formulario"
+                                 value="#{inventarioBean.videojuego.descripcion}"
+                                 required="true"
+                                 requiredMessage="La descripción es obligatoria."
+                                 rows="3"/>
+
+                <h:outputLabel for="categoria" value="Categoría:"/>
+                <h:inputText id="categoria"
+                             styleClass="campo-formulario"
+                             value="#{inventarioBean.videojuego.categoria}"
+                             required="true"
+                             requiredMessage="La categoría es obligatoria."/>
+
+                <h:outputLabel for="precio" value="Precio:"/>
+                <h:inputText id="precio"
+                             styleClass="campo-formulario"
+                             value="#{inventarioBean.videojuego.precio}"
+                             required="true"
+                             requiredMessage="El precio es obligatorio.">
+                    <f:validateDoubleRange minimum="0"/>
+                </h:inputText>
+
+                <h:outputLabel for="stock" value="Stock:"/>
+                <h:inputText id="stock"
+                             styleClass="campo-formulario"
+                             value="#{inventarioBean.videojuego.stock}"
+                             required="true"
+                             requiredMessage="El stock es obligatorio.">
+                    <f:validateLongRange minimum="0"/>
+                </h:inputText>
+
+                <h:outputLabel for="imagen" value="URL de imagen:"/>
+                <h:inputText id="imagen"
+                             styleClass="campo-formulario"
+                             value="#{inventarioBean.videojuego.imagenUrl}"
+                             size="45"/>
+            </h:panelGrid>
+
+            <div class="acciones-editor">
+                <h:commandButton value="Guardar videojuego"
+                                 styleClass="boton"
+                                 action="#{inventarioBean.guardar}">
+                    <f:ajax execute="@form"
+                            render="@form"/>
+                </h:commandButton>
+            </div>
+        </h:panelGroup>
+
+        </h:form>
+    </main>
+
+    <footer class="pie-pagina">
+        © 2026 Gameverse · Gestión de inventario
+    </footer>
+</h:body>
+</html>
