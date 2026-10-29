@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -9,10 +9,7 @@
     <groupId>com.gameverse</groupId>
     <artifactId>gameverse</artifactId>
     <version>1.0-SNAPSHOT</version>
-<<<<<<< HEAD
-=======
 
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
     <packaging>war</packaging>
 
     <properties>
@@ -21,12 +18,8 @@
     </properties>
 
     <dependencies>
-<<<<<<< HEAD
-        <!-- Jakarta Servlet API -->
-=======
 
         <!-- Jakarta Servlet -->
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -34,11 +27,7 @@
             <scope>provided</scope>
         </dependency>
 
-<<<<<<< HEAD
-        <!-- Jakarta JSP API -->
-=======
         <!-- Jakarta JSP -->
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
@@ -46,8 +35,6 @@
             <scope>provided</scope>
         </dependency>
 
-<<<<<<< HEAD
-=======
         <!-- JSTL API -->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
@@ -62,7 +49,6 @@
             <version>3.0.1</version>
         </dependency>
 
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
         <!-- MySQL Connector -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -70,39 +56,56 @@
             <version>9.4.0</version>
         </dependency>
 
-<<<<<<< HEAD
-        <!-- Jakarta Faces / JSF 4.0 (Mojarra) -->
+        <!-- Jakarta Faces and CDI for JSF controllers on Tomcat -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.faces</artifactId>
-            <version>4.0.1</version>
+            <version>4.0.27</version>
         </dependency>
-
-        <!-- Jakarta Annotations (@PostConstruct) -->
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-
-        <!-- Jakarta Enterprise Beans / CDI (@Named, @RequestScoped) -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <version>4.0.1</version>
+            <scope>provided</scope>
         </dependency>
-=======
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld.servlet</groupId>
+            <artifactId>weld-servlet-shaded</artifactId>
+            <version>5.1.7.Final</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.13.4</version>
+            <scope>test</scope>
+        </dependency>
+
+            <!-- Hibernate ORM / JPA -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.6.58.Final</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-<<<<<<< HEAD
-            <!-- Plugin del Compilador -->
-=======
 
-            <!-- Compilación con el runtime LTS objetivo -->
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
+            <!-- Compilaci├│n con el runtime LTS objetivo -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -112,50 +115,19 @@
                 </configuration>
             </plugin>
 
-<<<<<<< HEAD
-            <!-- Plugin Empaquetador WAR -->
-=======
-            <!-- Generación del WAR -->
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
+            <!-- Generaci├│n del WAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
-<<<<<<< HEAD
-=======
 
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
 
-<<<<<<< HEAD
-            <!-- Copia automatica de dependencias JAR a WEB-INF/lib para SmartTomcat -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/src/main/webapp/WEB-INF/lib</outputDirectory>
-                            <excludeGroupIds>jakarta.servlet,jakarta.servlet.jsp</excludeGroupIds>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-</project>
-=======
         </plugins>
     </build>
 
 </project>
->>>>>>> f1719d037429a3d95c1fd9ef34efac4687711417
+

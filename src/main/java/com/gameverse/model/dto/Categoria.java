@@ -1,3 +1,4 @@
+
 package com.gameverse.model.dto;
 
 import java.io.Serializable;
@@ -39,5 +40,37 @@ public class Categoria implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    /*
+     * CORRECCIÓN DE INTEGRACIÓN - SPRINT II
+     *
+     * Se agregan equals() y hashCode() para que dos
+     * categorías con el mismo ID sean consideradas iguales.
+     *
+     * Esto permite que JSF compare correctamente la categoría
+     * seleccionada con las opciones del formulario.
+     *
+     * Error que buscamos resolver:
+     * "Error de validación: el valor no es válido".
+     */
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Categoria)) {
+            return false;
+        }
+
+        Categoria otra = (Categoria) obj;
+        return this.id == otra.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
     }
 }

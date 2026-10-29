@@ -18,9 +18,9 @@
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
 
-    <!-- Define formulario.xhtml como página inicial por defecto -->
+    <!-- Define la página principal del sistema como entrada por defecto -->
     <welcome-file-list>
-        <welcome-file>formulario.xhtml</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
 </web-app>

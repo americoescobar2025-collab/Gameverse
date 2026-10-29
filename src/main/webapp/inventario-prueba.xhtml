@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Gameverse - Prueba de inventario</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1"/>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 9px;
+            text-align: left;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        input, textarea {
+            margin: 5px;
+            padding: 6px;
+        }
+
+        .panel {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+
+        .boton {
+            margin: 3px;
+            cursor: pointer;
+        }
+
+        .mensaje {
+            margin: 12px 0;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+    <h1>Gameverse - Prueba de inventario</h1>
+
+    <p>
+        Pantalla temporal para verificar el CRUD
+        y los ajustes de stock de Edwin.
+    </p>
+
+    <!--
+        Pantalla de pruebas del inventario.
+        No reemplaza la interfaz principal del proyecto.
+    -->
+    <h:form id="formInventario">
+
+        <h:messages id="mensajes"
+                    globalOnly="true"
+                    showDetail="true"
+                    styleClass="mensaje"/>
+
+        <h:commandButton value="Actualizar listado"
+                         action="#{inventarioBean.cargarInventario}">
+            <f:ajax execute="@this"
+                    render="tabla mensajes"/>
+        </h:commandButton>
+
+        <h:commandButton value="Nuevo videojuego"
+                         action="#{inventarioBean.prepararNuevo}">
+            <f:ajax execute="@this"
+                    render="editor mensajes"/>
+        </h:commandButton>
+
+        <h:dataTable id="tabla"
+                     value="#{inventarioBean.videojuegos}"
+                     var="juego">
+
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                #{juego.id}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Título</f:facet>
+                #{juego.titulo}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Categoría</f:facet>
+                #{juego.categoria}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Precio</f:facet>
+                $#{juego.precio}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Stock</f:facet>
+                #{juego.stock}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Acciones</f:facet>
+
+                <h:commandButton value="Editar"
+                                 styleClass="boton"
+                                 action="#{inventarioBean.prepararEdicion(juego.id)}">
+                    <f:ajax execute="@this"
+                            render="editor mensajes"/>
+                </h:commandButton>
+
+                <h:commandButton value="+1 stock"
+                                 styleClass="boton"
+                                 action="#{inventarioBean.ajustarStock(juego.id, 1)}">
+                    <f:ajax execute="@this"
+                            render="tabla mensajes"/>
+                </h:commandButton>
+
+                <h:commandButton value="-1 stock"
+                                 styleClass="boton"
+                                 action="#{inventarioBean.ajustarStock(juego.id, -1)}">
+                    <f:ajax execute="@this"
+                            render="tabla mensajes"/>
+                </h:commandButton>
+
+                <h:commandButton value="Eliminar"
+                                 styleClass="boton"
+                                 onclick="return confirm('¿Eliminar este videojuego?');"
+                                 action="#{inventarioBean.eliminar(juego.id)}">
+                    <f:ajax execute="@this"
+                            render="tabla mensajes"/>
+                </h:commandButton>
+
+            </h:column>
+
+        </h:dataTable>
+
+        <h:panelGroup id="editor"
+                      layout="block"
+                      styleClass="panel">
+
+            <h2>Crear o editar videojuego</h2>
+
+            <p>
+                ID actual:
+                #{inventarioBean.videojuego.id}
+            </p>
+
+            <h:panelGrid columns="2">
+
+                <h:outputLabel for="titulo"
+                               value="Título:"/>
+
+                <h:inputText id="titulo"
+                             value="#{inventarioBean.videojuego.titulo}"
+                             required="true"
+                             requiredMessage="El título es obligatorio."/>
+
+                <h:outputLabel for="descripcion"
+                               value="Descripción:"/>
+
+                <h:inputTextarea id="descripcion"
+                                 value="#{inventarioBean.videojuego.descripcion}"
+                                 required="true"
+                                 rows="3"
+                                 cols="40"/>
+
+                <h:outputLabel for="categoria"
+                               value="Categoría:"/>
+
+                <h:inputText id="categoria"
+                             value="#{inventarioBean.videojuego.categoria}"
+                             required="true"/>
+
+                <h:outputLabel for="precio"
+                               value="Precio:"/>
+
+                <h:inputText id="precio"
+                             value="#{inventarioBean.videojuego.precio}"
+                             required="true">
+                    <f:validateDoubleRange minimum="0"/>
+                </h:inputText>
+
+                <h:outputLabel for="stock"
+                               value="Stock:"/>
+
+                <h:inputText id="stock"
+                             value="#{inventarioBean.videojuego.stock}"
+                             required="true">
+                    <f:validateLongRange minimum="0"/>
+                </h:inputText>
+
+                <h:outputLabel for="imagen"
+                               value="URL de imagen:"/>
+
+                <h:inputText id="imagen"
+                             value="#{inventarioBean.videojuego.imagenUrl}"
+                             size="45"/>
+
+            </h:panelGrid>
+
+            <h:commandButton value="Guardar videojuego"
+                             action="#{inventarioBean.guardar}">
+                <f:ajax execute="@form"
+                        render="@form"/>
+            </h:commandButton>
+
+        </h:panelGroup>
+
+    </h:form>
+
+</h:body>
+</html>
