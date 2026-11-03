@@ -2,7 +2,6 @@ package com.gameverse.model.dao;
 
 import com.gameverse.config.DatabaseConfig;
 import com.gameverse.inventory.InventoryPersistenceException;
-import com.gameverse.inventory.InventoryRepository;
 import com.gameverse.model.dto.Videojuego;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
-public class VideojuegoDAO implements InventoryRepository {
+public class VideojuegoDAO {
 
     private static final String CONSULTA_INVENTARIO =
             "SELECT v.id_videojuego, v.titulo, v.descripcion, v.precio, v.stock, v.imagen_url, c.nombre AS categoria "
@@ -34,11 +33,19 @@ public class VideojuegoDAO implements InventoryRepository {
         return lista;
     }
 
+    public List<Videojuego> listar() throws SQLException {
+        return obtenerTodos();
+    }
+
     /**
      * Registra un videojuego asociándolo con una categoría existente.
      * La búsqueda de la categoría no depende de mayúsculas/minúsculas.
      */
     public void insertar(Videojuego videojuego) throws SQLException {
+        crear(videojuego);
+    }
+
+    public int crear(Videojuego videojuego) throws SQLException {
         String sql = "INSERT INTO videojuegos "
                 + "(titulo, descripcion, precio, stock, imagen_url, id_categoria) "
                 + "SELECT ?, ?, ?, ?, ?, c.id_categoria "
@@ -46,7 +53,7 @@ public class VideojuegoDAO implements InventoryRepository {
                 + "WHERE LOWER(TRIM(c.nombre)) = LOWER(TRIM(?))";
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, videojuego.getTitulo());
             ps.setString(2, videojuego.getDescripcion());
             ps.setDouble(3, videojuego.getPrecio());
@@ -58,10 +65,50 @@ public class VideojuegoDAO implements InventoryRepository {
             if (ps.executeUpdate() == 0) {
                 throw new SQLException("La categoría indicada no existe en la base de datos.");
             }
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (!rs.next()) {
+                    throw new SQLException("No se pudo obtener el identificador del videojuego creado.");
+                }
+                int id = rs.getInt(1);
+                videojuego.setId(id);
+                return id;
+            }
         }
     }
 
-    @Override
+    public void actualizar(Videojuego videojuego) throws SQLException {
+        String categoriaSql = "SELECT id_categoria FROM categorias "
+                + "WHERE LOWER(TRIM(nombre)) = LOWER(TRIM(?))";
+        String actualizarSql = "UPDATE videojuegos SET titulo = ?, descripcion = ?, precio = ?, "
+                + "stock = ?, imagen_url = ?, id_categoria = ? WHERE id_videojuego = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement categoriaPs = conn.prepareStatement(categoriaSql)) {
+            categoriaPs.setString(1, videojuego.getCategoria());
+            int idCategoria;
+            try (ResultSet rs = categoriaPs.executeQuery()) {
+                if (!rs.next()) {
+                    throw new SQLException("La categoría indicada no existe en la base de datos.");
+                }
+                idCategoria = rs.getInt("id_categoria");
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(actualizarSql)) {
+                ps.setString(1, videojuego.getTitulo());
+                ps.setString(2, videojuego.getDescripcion());
+                ps.setDouble(3, videojuego.getPrecio());
+                ps.setInt(4, videojuego.getStock());
+                ps.setString(5, videojuego.getImagenUrl());
+                ps.setInt(6, idCategoria);
+                ps.setInt(7, videojuego.getId());
+
+                if (ps.executeUpdate() == 0 && !existe(conn, videojuego.getId())) {
+                    throw new SQLException("No se encontró el videojuego que deseas actualizar.");
+                }
+            }
+        }
+    }
+
     public List<Videojuego> obtenerInventario() {
         try {
             return obtenerTodos();
@@ -70,7 +117,6 @@ public class VideojuegoDAO implements InventoryRepository {
         }
     }
 
-    @Override
     public Optional<Videojuego> buscarPorId(int id) {
         String sql = CONSULTA_INVENTARIO + " WHERE v.id_videojuego = ?";
         try (Connection conn = DatabaseConfig.getConnection();
@@ -84,40 +130,18 @@ public class VideojuegoDAO implements InventoryRepository {
         }
     }
 
-    @Override
     public void guardar(Videojuego videojuego) {
         try {
-            if (videojuego.getId() <= 0) {
-                insertar(videojuego);
+            if (videojuego.getId() == 0) {
+                crear(videojuego);
                 return;
             }
-
-            String sql = "UPDATE videojuegos v "
-                    + "INNER JOIN categorias c ON LOWER(TRIM(c.nombre)) = LOWER(TRIM(?)) "
-                    + "SET v.titulo = ?, v.descripcion = ?, v.precio = ?, v.stock = ?, "
-                    + "v.imagen_url = ?, v.id_categoria = c.id_categoria "
-                    + "WHERE v.id_videojuego = ?";
-            try (Connection conn = DatabaseConfig.getConnection();
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, videojuego.getCategoria());
-                ps.setString(2, videojuego.getTitulo());
-                ps.setString(3, videojuego.getDescripcion());
-                ps.setDouble(4, videojuego.getPrecio());
-                ps.setInt(5, videojuego.getStock());
-                ps.setString(6, videojuego.getImagenUrl());
-                ps.setInt(7, videojuego.getId());
-                if (ps.executeUpdate() == 0) {
-                    throw new InventoryPersistenceException(
-                            "No se guardó el videojuego: verifica su identificador y que la categoría exista."
-                    );
-                }
-            }
+            actualizar(videojuego);
         } catch (SQLException e) {
             throw new InventoryPersistenceException("No se pudo guardar el videojuego.", e);
         }
     }
 
-    @Override
     public void eliminar(int id) {
         String sql = "DELETE FROM videojuegos WHERE id_videojuego = ?";
         try (Connection conn = DatabaseConfig.getConnection();
@@ -131,7 +155,6 @@ public class VideojuegoDAO implements InventoryRepository {
         }
     }
 
-    @Override
     public boolean ajustarStock(int id, int cambio) {
         String sql = "UPDATE videojuegos SET stock = stock + ? "
                 + "WHERE id_videojuego = ? "
@@ -144,6 +167,32 @@ public class VideojuegoDAO implements InventoryRepository {
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new InventoryPersistenceException("No se pudo ajustar el stock del videojuego.", e);
+        }
+    }
+
+    public boolean actualizarStock(int id, int nuevoStock) {
+        if (id <= 0 || nuevoStock < 0) {
+            return false;
+        }
+        String sql = "UPDATE videojuegos SET stock = ? WHERE id_videojuego = ? AND ? >= 0";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, nuevoStock);
+            ps.setInt(2, id);
+            ps.setInt(3, nuevoStock);
+            return ps.executeUpdate() > 0 || existe(conn, id);
+        } catch (SQLException e) {
+            throw new InventoryPersistenceException("No se pudo actualizar el stock del videojuego.", e);
+        }
+    }
+
+    private boolean existe(Connection connection, int id) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT 1 FROM videojuegos WHERE id_videojuego = ?")) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         }
     }
 

@@ -92,7 +92,9 @@ Controlador
 
 Los controladores utilizan Servlets para recibir las solicitudes del usuario, procesarlas y comunicarse con el modelo.
 
-El módulo de Inventario de Fase 2 incorpora un controlador JSF (`InventarioBean`) y una capa de negocio (`InventoryService`). Su acceso a datos depende de `InventoryRepository`, de modo que la implementación JDBC actual puede sustituirse por JPA/Hibernate cuando esa integración sea aprobada.
+El módulo de Inventario incorpora un controlador JSF (`InventarioBean`) y una capa de negocio (`InventoryService`). La capa de negocio depende de `InventoryRepository`; su implementación JDBC (`InventoryDAO`) reutiliza las consultas de `VideojuegoDAO`. `VideojuegoService` expone las operaciones de videojuegos y reutiliza las validaciones del inventario. `VideojuegoJpaDAO` es una implementación separada y no forma parte de este flujo JDBC.
+
+El módulo de usuarios reutiliza `UsuarioService`, `UsuarioDAO` y `Usuario`. El servicio valida y normaliza los datos, almacena contraseñas con PBKDF2 y devuelve modelos que no incluyen contraseñas ni hashes.
 
 El controlador permite listar, registrar, editar y eliminar videojuegos, además de ajustar el stock sin permitir valores negativos. La vista JSF del módulo corresponde a la Persona 4 y todavía no forma parte de esta entrega.
 
@@ -100,12 +102,24 @@ controller/
 └── CatalogoServlet.java
 Acceso a datos
 
-El acceso a la base de datos se implementa mediante el patrón DAO (Data Access Object).
+El acceso a MySQL se implementa con JDBC y el patrón DAO (Data Access Object):
 
 model/dao/
-└── VideojuegoDAO.java
+├── VideojuegoDAO.java
+├── InventoryDAO.java
+└── UsuarioDAO.java
 
-Esta clase se encarga de realizar las consultas necesarias a la base de datos.
+`VideojuegoDAO` contiene las consultas JDBC de videojuegos; `InventoryDAO` adapta esas operaciones a `InventoryRepository`, incluida la actualización de stock; `UsuarioDAO` persiste usuarios sin leer ni devolver `password_hash`. Los servicios (`VideojuegoService`, `InventoryService` y `UsuarioService`) validan los datos antes de delegar la persistencia.
+
+### Guía de integración para la API REST (Actividad 2B)
+
+- Inyectar `VideojuegoService` para listar, buscar, crear, actualizar y eliminar videojuegos. `buscarPorId` devuelve `Optional`; `crear` requiere ID `0`, persiste el videojuego y asigna el ID generado al mismo objeto. Las validaciones inválidas lanzan `IllegalArgumentException`; los errores JDBC se propagan como `InventoryPersistenceException`.
+- Inyectar `InventoryService` para `obtenerInventario`, `buscarPorId`, `ajustarStock` y `actualizarStock`. `ajustarStock(id, cambio)` aplica un cambio incremental; `actualizarStock(id, nuevoStock)` establece el valor absoluto. Ambos rechazan IDs inválidos y stock resultante negativo.
+- Reutilizar `UsuarioService.registrar`, `listarUsuarios` y `buscarUsuario`. El registro devuelve el ID; el modelo `Usuario` solo contiene datos públicos. `SQLException` puede señalar errores de persistencia, incluido un correo duplicado. No exponer ni registrar contraseñas o hashes.
+- Para preparar MySQL, importar `database/fase3_usuarios.sql` sobre `gameverse_db`; es seguro para las otras tablas existentes. `database/gameverse_db.sql`, en cambio, elimina y vuelve a crear la base de datos.
+- No agregar endpoints ni controladores como parte de esta capa. El futuro controlador debe traducir errores de validación y persistencia a respuestas HTTP apropiadas y evitar devolver detalles SQL internos.
+- Ejecutar `mvn clean test` con MySQL iniciado y las credenciales locales válidas para correr también la prueba de integración de usuarios.
+- `src/main/resources/db.properties` ya está versionado en la rama base; no agregar ni modificar allí credenciales locales. Conviene migrar esa configuración fuera del repositorio en una tarea separada.
 
 Configuración
 
@@ -165,12 +179,14 @@ Base de datos utilizada
 gameverse_db
 Tablas principales
 
-Actualmente se utilizan las siguientes tablas:
+Las tablas de videojuegos son:
 
 categorias
 videojuegos
 
 La tabla videojuegos mantiene una relación con la tabla categorias mediante el campo id_categoria.
+
+El módulo de usuarios agrega la tabla `usuarios`, cuyo correo tiene una restricción `UNIQUE` y cuyo campo `password_hash` almacena el hash de la contraseña. Para crear las tablas de videojuegos, `database/gameverse_db.sql` recrea la base de datos; **su ejecución elimina primero la base existente**. Para agregar usuarios sin recrear otras tablas, ejecuta `database/fase3_usuarios.sql`.
 
 Configuración de la conexión a la base de datos
 
