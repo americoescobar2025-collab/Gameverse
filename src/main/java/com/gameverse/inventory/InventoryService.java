@@ -35,6 +35,9 @@ public class InventoryService implements Serializable {
 
     public void guardar(Videojuego videojuego) {
         validarVideojuego(videojuego);
+        if (videojuego.getId() < 0) {
+            throw new IllegalArgumentException("El identificador del videojuego no es válido.");
+        }
         videojuego.setTitulo(videojuego.getTitulo().trim());
         videojuego.setDescripcion(videojuego.getDescripcion().trim());
         videojuego.setCategoria(videojuego.getCategoria().trim());
@@ -56,6 +59,16 @@ public class InventoryService implements Serializable {
             throw new IllegalArgumentException(
                     "No se pudo ajustar el stock: verifica que el videojuego exista y que el stock no quede negativo ni exceda el límite permitido."
             );
+        }
+    }
+
+    public void actualizarStock(int id, int nuevoStock) {
+        validarId(id);
+        if (nuevoStock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo.");
+        }
+        if (!repository.actualizarStock(id, nuevoStock)) {
+            throw new IllegalArgumentException("No se encontró el videojuego que deseas actualizar.");
         }
     }
 
