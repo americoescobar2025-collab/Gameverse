@@ -146,7 +146,8 @@
         }
 
         .volver,
-        .nuevo {
+        .nuevo,
+        .cerrar-sesion {
             display: inline-block;
             padding: 12px 20px;
             border-radius: 8px;
@@ -154,6 +155,9 @@
             color: #ffffff;
             text-decoration: none;
             font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
         }
 
         .volver:hover,
@@ -163,6 +167,14 @@
 
         .nuevo {
             background: #475569;
+        }
+
+        .cerrar-sesion {
+            background: #b91c1c;
+        }
+
+        .cerrar-sesion:hover {
+            background: #dc2626;
         }
 
         @media (max-width: 600px) {
@@ -179,7 +191,8 @@
             }
 
             .volver,
-            .nuevo {
+            .nuevo,
+            .cerrar-sesion {
                 text-align: center;
                 width: 100%;
             }
@@ -245,18 +258,19 @@
 
                         <div class="contenido">
 
-                        <h2><c:out value="${juego.titulo}" /></h2>
+                            <h2><c:out value="${juego.titulo}" /></h2>
 
                             <p class="descripcion">
                                 <c:out value="${juego.descripcion}" />
                             </p>
 
                             <p class="dato precio">
-                                Precio: <fmt:formatNumber value="${juego.precio}"
-                                                          type="currency"
-                                                          currencySymbol="$"
-                                                          minFractionDigits="2"
-                                                          maxFractionDigits="2" />
+                                Precio:
+                                <fmt:formatNumber value="${juego.precio}"
+                                                  type="currency"
+                                                  currencySymbol="$"
+                                                  minFractionDigits="2"
+                                                  maxFractionDigits="2" />
                             </p>
 
                             <p class="dato stock">
@@ -264,11 +278,9 @@
                             </p>
 
                             <c:if test="${not empty juego.categoria}">
-
                                 <span class="categoria">
                                     <c:out value="${juego.categoria}" />
                                 </span>
-
                             </c:if>
 
                         </div>
@@ -290,8 +302,14 @@
             ← Volver al inicio
         </a>
 
-        <a class="nuevo" href="${pageContext.request.contextPath}/videojuegos">
+        <a class="nuevo"
+           href="${pageContext.request.contextPath}/videojuegos">
             + Registrar videojuego
+        </a>
+
+        <a class="cerrar-sesion"
+           href="${pageContext.request.contextPath}/logout">
+            Cerrar sesión
         </a>
 
     </div>

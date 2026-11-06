@@ -75,7 +75,8 @@
     <h1>Ocurrió un error</h1>
 
     <p class="mensaje">
-        ${not empty error ? error : 'No fue posible completar la solicitud.'}
+        No fue posible completar tu solicitud.
+        Por favor, inténtalo nuevamente más tarde.
     </p>
 
     <a class="boton"

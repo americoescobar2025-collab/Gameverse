@@ -239,7 +239,7 @@
                    placeholder="Ej. 29.99">
 
             <small class="ayuda">
-                El precio debe ser igual o mayor a 0.
+                El precio debe ser mayor que 0.
             </small>
         </div>
 
