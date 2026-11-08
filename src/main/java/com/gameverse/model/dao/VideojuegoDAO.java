@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +37,9 @@ public class VideojuegoDAO implements InventoryRepository {
     }
 
     /**
-     * Registra un videojuego asociándolo con una categoría existente.
-     * La búsqueda de la categoría no depende de mayúsculas/minúsculas.
+     * Registra un videojuego. Si la categoría todavía no existe, la crea
+     * automáticamente para que el formulario y la API acepten categorías
+     * nuevas sin una operación previa adicional.
      */
     public void insertar(Videojuego videojuego) throws SQLException {
         crear(videojuego);
@@ -49,32 +51,41 @@ public class VideojuegoDAO implements InventoryRepository {
      * devolver el recurso creado en la respuesta 201.
      */
     public int crear(Videojuego videojuego) throws SQLException {
-        String sql = "INSERT INTO videojuegos "
-                + "(titulo, descripcion, precio, stock, imagen_url, id_categoria) "
-                + "SELECT ?, ?, ?, ?, ?, c.id_categoria "
-                + "FROM categorias c "
-                + "WHERE LOWER(TRIM(c.nombre)) = LOWER(TRIM(?))";
-
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, videojuego.getTitulo());
-            ps.setString(2, videojuego.getDescripcion());
-            ps.setDouble(3, videojuego.getPrecio());
-            ps.setInt(4, videojuego.getStock());
-            ps.setString(5, videojuego.getImagenUrl() == null || videojuego.getImagenUrl().isBlank()
-                    ? null : videojuego.getImagenUrl());
-            ps.setString(6, videojuego.getCategoria());
+             PreparedStatement ps = conn.prepareStatement(
+                     "INSERT INTO videojuegos "
+                             + "(titulo, descripcion, precio, stock, imagen_url, id_categoria) "
+                             + "VALUES (?, ?, ?, ?, ?, ?)",
+                     Statement.RETURN_GENERATED_KEYS)) {
+            boolean autoCommit = conn.getAutoCommit();
+            try {
+                conn.setAutoCommit(false);
+                int idCategoria = obtenerOCrearCategoria(conn, videojuego.getCategoria());
+                ps.setString(1, videojuego.getTitulo());
+                ps.setString(2, videojuego.getDescripcion());
+                ps.setDouble(3, videojuego.getPrecio());
+                ps.setInt(4, videojuego.getStock());
+                ps.setString(5, videojuego.getImagenUrl() == null || videojuego.getImagenUrl().isBlank()
+                        ? null : videojuego.getImagenUrl());
+                ps.setInt(6, idCategoria);
 
-            if (ps.executeUpdate() == 0) {
-                throw new SQLException("La categoría indicada no existe en la base de datos.");
-            }
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (!rs.next()) {
-                    throw new SQLException("No se pudo obtener el identificador del videojuego creado.");
+                if (ps.executeUpdate() == 0) {
+                    throw new SQLException("No se pudo registrar el videojuego.");
                 }
-                int id = rs.getInt(1);
-                videojuego.setId(id);
-                return id;
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (!rs.next()) {
+                        throw new SQLException("No se pudo obtener el identificador del videojuego creado.");
+                    }
+                    int id = rs.getInt(1);
+                    conn.commit();
+                    videojuego.setId(id);
+                    return id;
+                }
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(autoCommit);
             }
         }
     }
@@ -110,24 +121,30 @@ public class VideojuegoDAO implements InventoryRepository {
                 return;
             }
 
-            String sql = "UPDATE videojuegos v "
-                    + "INNER JOIN categorias c ON LOWER(TRIM(c.nombre)) = LOWER(TRIM(?)) "
-                    + "SET v.titulo = ?, v.descripcion = ?, v.precio = ?, v.stock = ?, "
-                    + "v.imagen_url = ?, v.id_categoria = c.id_categoria "
-                    + "WHERE v.id_videojuego = ?";
+            String sql = "UPDATE videojuegos SET titulo = ?, descripcion = ?, precio = ?, "
+                    + "stock = ?, imagen_url = ?, id_categoria = ? WHERE id_videojuego = ?";
             try (Connection conn = DatabaseConfig.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, videojuego.getCategoria());
-                ps.setString(2, videojuego.getTitulo());
-                ps.setString(3, videojuego.getDescripcion());
-                ps.setDouble(4, videojuego.getPrecio());
-                ps.setInt(5, videojuego.getStock());
-                ps.setString(6, videojuego.getImagenUrl());
-                ps.setInt(7, videojuego.getId());
-                if (ps.executeUpdate() == 0) {
-                    throw new InventoryPersistenceException(
-                            "No se guardó el videojuego: verifica su identificador y que la categoría exista."
-                    );
+                boolean autoCommit = conn.getAutoCommit();
+                try {
+                    conn.setAutoCommit(false);
+                    int idCategoria = obtenerOCrearCategoria(conn, videojuego.getCategoria());
+                    ps.setString(1, videojuego.getTitulo());
+                    ps.setString(2, videojuego.getDescripcion());
+                    ps.setDouble(3, videojuego.getPrecio());
+                    ps.setInt(4, videojuego.getStock());
+                    ps.setString(5, videojuego.getImagenUrl());
+                    ps.setInt(6, idCategoria);
+                    ps.setInt(7, videojuego.getId());
+                    if (ps.executeUpdate() == 0) {
+                        throw new SQLException("No se encontró el videojuego que deseas actualizar.");
+                    }
+                    conn.commit();
+                } catch (SQLException e) {
+                    conn.rollback();
+                    throw e;
+                } finally {
+                    conn.setAutoCommit(autoCommit);
                 }
             }
         } catch (SQLException e) {
@@ -163,6 +180,44 @@ public class VideojuegoDAO implements InventoryRepository {
         } catch (SQLException e) {
             throw new InventoryPersistenceException("No se pudo ajustar el stock del videojuego.", e);
         }
+    }
+
+    private int obtenerOCrearCategoria(Connection conn, String nombre) throws SQLException {
+        String buscarSql = "SELECT id_categoria FROM categorias "
+                + "WHERE LOWER(TRIM(nombre)) = LOWER(TRIM(?))";
+        try (PreparedStatement ps = conn.prepareStatement(buscarSql)) {
+            ps.setString(1, nombre);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_categoria");
+                }
+            }
+        }
+
+        String insertarSql = "INSERT INTO categorias (nombre) VALUES (?)";
+        try (PreparedStatement ps = conn.prepareStatement(insertarSql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, nombre);
+            try {
+                ps.executeUpdate();
+            } catch (SQLIntegrityConstraintViolationException e) {
+                // Otra solicitud pudo crearla después de la primera consulta.
+                try (PreparedStatement buscar = conn.prepareStatement(buscarSql)) {
+                    buscar.setString(1, nombre);
+                    try (ResultSet rs = buscar.executeQuery()) {
+                        if (rs.next()) {
+                            return rs.getInt("id_categoria");
+                        }
+                    }
+                }
+                throw e;
+            }
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        throw new SQLException("No se pudo crear la categoría indicada.");
     }
 
     private Videojuego mapearVideojuego(ResultSet rs) throws SQLException {

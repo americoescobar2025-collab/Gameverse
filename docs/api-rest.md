@@ -66,7 +66,7 @@ curl -i -X PATCH http://localhost:8080/Gameverse/api/videojuegos/1/stock \
 
 Las reglas de título, descripción, precio, stock, URL de imagen y categoría
 se delegan en `InventoryService`, que es la misma capa usada por el módulo de
-inventario. La categoría debe existir en la base de datos.
+inventario. Si la categoría no existe, el sistema la crea automáticamente.
 
 Los errores se devuelven con un formato uniforme:
 

@@ -8,7 +8,6 @@ import com.gameverse.inventory.InventoryService;
 import com.gameverse.model.dao.VideojuegoDAO;
 import com.gameverse.model.dto.Videojuego;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +26,6 @@ import java.util.stream.Stream;
  * validación se delegan en {@link InventoryService}; este servlet solamente
  * traduce HTTP a operaciones de negocio y devuelve JSON.</p>
  */
-@WebServlet(name = "VideojuegoRestServlet", urlPatterns = "/api/videojuegos/*")
 public class VideojuegoRestServlet extends HttpServlet {
 
     private static final String JSON_CONTENT_TYPE = "application/json;charset=UTF-8";

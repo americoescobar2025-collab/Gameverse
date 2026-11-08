@@ -18,6 +18,17 @@
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
 
+    <!-- API REST de videojuegos -->
+    <servlet>
+        <servlet-name>VideojuegoRestServlet</servlet-name>
+        <servlet-class>com.gameverse.api.VideojuegoRestServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>VideojuegoRestServlet</servlet-name>
+        <url-pattern>/api/videojuegos/*</url-pattern>
+    </servlet-mapping>
+
     <!-- Define la página principal del sistema como entrada por defecto -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
