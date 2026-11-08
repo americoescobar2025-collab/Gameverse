@@ -241,6 +241,17 @@ http://localhost:8080/Gameverse/
 Para acceder directamente al catálogo:
 
 http://localhost:8080/Gameverse/catalogo
+
+API REST
+
+La API REST independiente de la interfaz principal expone el recurso de
+videojuegos en:
+
+http://localhost:8080/Gameverse/api/videojuegos
+
+Incluye operaciones GET, POST, PUT, PATCH (ajuste de stock) y DELETE, con
+respuestas JSON, validaciones de la capa de negocio y errores uniformes. El
+contrato completo y ejemplos de consumo están en `docs/api-rest.md`.
 Gestión de dependencias
 
 Las dependencias del proyecto son administradas mediante Apache Maven.

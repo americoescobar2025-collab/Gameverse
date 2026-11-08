@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +40,15 @@ public class VideojuegoDAO implements InventoryRepository {
      * La búsqueda de la categoría no depende de mayúsculas/minúsculas.
      */
     public void insertar(Videojuego videojuego) throws SQLException {
+        crear(videojuego);
+    }
+
+    /**
+     * Inserta un videojuego y devuelve el identificador generado por MySQL.
+     * El identificador también se copia al DTO para que la API REST pueda
+     * devolver el recurso creado en la respuesta 201.
+     */
+    public int crear(Videojuego videojuego) throws SQLException {
         String sql = "INSERT INTO videojuegos "
                 + "(titulo, descripcion, precio, stock, imagen_url, id_categoria) "
                 + "SELECT ?, ?, ?, ?, ?, c.id_categoria "
@@ -46,7 +56,7 @@ public class VideojuegoDAO implements InventoryRepository {
                 + "WHERE LOWER(TRIM(c.nombre)) = LOWER(TRIM(?))";
 
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, videojuego.getTitulo());
             ps.setString(2, videojuego.getDescripcion());
             ps.setDouble(3, videojuego.getPrecio());
@@ -57,6 +67,14 @@ public class VideojuegoDAO implements InventoryRepository {
 
             if (ps.executeUpdate() == 0) {
                 throw new SQLException("La categoría indicada no existe en la base de datos.");
+            }
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (!rs.next()) {
+                    throw new SQLException("No se pudo obtener el identificador del videojuego creado.");
+                }
+                int id = rs.getInt(1);
+                videojuego.setId(id);
+                return id;
             }
         }
     }
