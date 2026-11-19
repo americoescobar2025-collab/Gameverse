@@ -1,6 +1,7 @@
 
 package com.gameverse.inventory;
 
+import com.gameverse.model.dao.InventoryDAO;
 import com.gameverse.model.dto.Videojuego;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -19,8 +20,12 @@ import java.util.Optional;
  * - Actividad 2B: operaciones JDBC mediante InventoryRepository.
  * - Actividad 3: validaciones adicionales de seguridad.
  *
- * Se resolvió el conflicto eliminando métodos duplicados,
- * sin perder las operaciones existentes.
+ * CORRECCIÓN DE INTEGRACIÓN:
+ * Se especifica InventoryDAO como dependencia CDI para evitar
+ * la ambigüedad entre InventoryDAO y VideojuegoDAO.
+ *
+ * Se conserva el constructor con InventoryRepository para
+ * permitir la inyección de implementaciones en las pruebas.
  */
 @Dependent
 public class InventoryService implements Serializable {
@@ -33,9 +38,21 @@ public class InventoryService implements Serializable {
     private final InventoryRepository repository;
 
     /**
-     * Recibe el repositorio que proporciona acceso al inventario.
+     * Constructor utilizado por CDI durante el despliegue.
+     *
+     * Se utiliza InventoryDAO explícitamente porque existen
+     * dos implementaciones de InventoryRepository.
      */
     @Inject
+    public InventoryService(InventoryDAO repository) {
+        this.repository = repository;
+    }
+
+    /**
+     * Constructor para pruebas y uso con InventoryRepository.
+     *
+     * No lleva @Inject para evitar la ambigüedad de CDI.
+     */
     public InventoryService(InventoryRepository repository) {
         this.repository = repository;
     }
@@ -116,8 +133,8 @@ public class InventoryService implements Serializable {
      * Establece un valor absoluto de stock.
      *
      * ACTIVIDAD 2B:
-     * Se conserva este método porque también forma
-     * parte de las operaciones de inventario integradas.
+     * Se conserva este método como parte de las
+     * operaciones de inventario integradas.
      */
     public void actualizarStock(int id, int nuevoStock) {
         validarId(id);
@@ -140,9 +157,6 @@ public class InventoryService implements Serializable {
      *
      * ACTIVIDAD 3 - SEGURIDAD:
      * El precio debe ser estrictamente mayor que cero.
-     *
-     * Esta regla sustituye la validación anterior que
-     * permitía registrar videojuegos con precio cero.
      */
     private void validarVideojuego(Videojuego videojuego) {
 

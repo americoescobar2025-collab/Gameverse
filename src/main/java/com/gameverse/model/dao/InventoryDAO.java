@@ -1,3 +1,4 @@
+
 package com.gameverse.model.dao;
 
 import com.gameverse.inventory.InventoryRepository;
@@ -8,11 +9,34 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * DAO de inventario de Gameverse.
+ *
+ * INTEGRACIÓN FASE 3:
+ * - Conserva las operaciones JDBC de la Actividad 2B.
+ * - Mantiene la compatibilidad con InventoryRepository.
+ *
+ * CORRECCIÓN CDI:
+ * Se agrega un constructor sin argumentos para que Weld
+ * pueda crear el proxy de este bean @ApplicationScoped.
+ *
+ * El constructor @Inject continúa siendo el utilizado
+ * para inyectar VideojuegoDAO durante la ejecución.
+ */
 @ApplicationScoped
 public class InventoryDAO implements InventoryRepository {
 
-    private final VideojuegoDAO videojuegoDAO;
+    private VideojuegoDAO videojuegoDAO;
 
+    /**
+     * Constructor requerido para la creación del proxy CDI.
+     */
+    protected InventoryDAO() {
+    }
+
+    /**
+     * Constructor utilizado por CDI para inyectar VideojuegoDAO.
+     */
     @Inject
     public InventoryDAO(VideojuegoDAO videojuegoDAO) {
         this.videojuegoDAO = videojuegoDAO;
