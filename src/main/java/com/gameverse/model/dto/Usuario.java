@@ -1,15 +1,17 @@
+
 package com.gameverse.model.dto;
 
 /**
  * Modelo de usuario de Gameverse.
  * Representa los datos publicos de una cuenta.
- * No expone contrasenas ni hashes en las respuestas.
  */
 public class Usuario {
+
     private int id;
     private String nombre;
     private String correo;
     private boolean activo;
+    private String passwordHash;
 
     public Usuario() {}
 
@@ -31,4 +33,9 @@ public class Usuario {
 
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
+
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
 }
