@@ -1,6 +1,7 @@
 package com.gameverse.inventory;
 
 import com.gameverse.model.dto.Videojuego;
+import com.gameverse.service.VideojuegoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -56,6 +57,15 @@ class InventoryServiceTest {
     }
 
     @Test
+    void guardarRechazaStockNegativo() {
+        Videojuego videojuego = juegoValido();
+        videojuego.setStock(-1);
+
+        assertThrows(IllegalArgumentException.class, () -> service.guardar(videojuego));
+        assertFalse(repository.guardarLlamado);
+    }
+
+    @Test
     void ajustarStockRechazaCuandoElResultadoSeriaNegativo() {
         repository.stockAjustable = false;
 
@@ -68,6 +78,58 @@ class InventoryServiceTest {
         assertThrows(IllegalArgumentException.class, () -> service.ajustarStock(1, 0));
     }
 
+    @Test
+    void actualizarStockValidaIdYRechazaValoresNegativos() {
+        assertThrows(IllegalArgumentException.class, () -> service.actualizarStock(0, 1));
+        assertThrows(IllegalArgumentException.class, () -> service.actualizarStock(1, -1));
+        assertFalse(repository.actualizarStockLlamado);
+    }
+
+    @Test
+    void actualizarStockDelegaElValorAbsolutoAlRepositorio() {
+        service.actualizarStock(1, 12);
+
+        assertEquals(12, repository.stockActualizado);
+        assertEquals(1, repository.idStockActualizado);
+    }
+
+    @Test
+    void videojuegoServiceExponeLasOperacionesDelInventario() {
+        VideojuegoService videojuegoService = new VideojuegoService(service);
+        Videojuego videojuego = juegoValido();
+
+        assertEquals(List.of(), videojuegoService.listar());
+        assertEquals(videojuego, videojuegoService.crear(videojuego));
+        assertEquals(videojuego, repository.guardado);
+    }
+
+    @Test
+    void videojuegoServiceRechazaIdsInvalidosParaCrearYActualizar() {
+        VideojuegoService videojuegoService = new VideojuegoService(service);
+        Videojuego videojuego = juegoValido();
+        videojuego.setId(-1);
+
+        assertThrows(IllegalArgumentException.class, () -> videojuegoService.crear(videojuego));
+        assertThrows(IllegalArgumentException.class, () -> videojuegoService.actualizar(videojuego));
+        assertFalse(repository.guardarLlamado);
+    }
+
+    @Test
+    void videojuegoServiceBuscaActualizaYEliminaPorId() {
+        Videojuego existente = new Videojuego(
+                7, "Juego existente", "Descripción existente", 19.99, 4, null, "Acción"
+        );
+        repository.videojuegos.add(existente);
+        VideojuegoService videojuegoService = new VideojuegoService(service);
+
+        assertEquals(Optional.of(existente), videojuegoService.buscarPorId(7));
+        videojuegoService.actualizar(existente);
+        assertEquals(existente, repository.guardado);
+
+        videojuegoService.eliminar(7);
+        assertEquals(List.of(), videojuegoService.listar());
+    }
+
     private Videojuego juegoValido() {
         return new Videojuego(0, "Juego válido", "Descripción válida", 19.99, 4, null, "Acción");
     }
@@ -78,6 +140,9 @@ class InventoryServiceTest {
         private Videojuego guardado;
         private boolean guardarLlamado;
         private boolean stockAjustable = true;
+        private boolean actualizarStockLlamado;
+        private int stockActualizado;
+        private int idStockActualizado;
 
         @Override
         public List<Videojuego> obtenerInventario() {
@@ -102,6 +167,14 @@ class InventoryServiceTest {
 
         @Override
         public boolean ajustarStock(int id, int cambio) {
+            return stockAjustable;
+        }
+
+        @Override
+        public boolean actualizarStock(int id, int nuevoStock) {
+            actualizarStockLlamado = true;
+            idStockActualizado = id;
+            stockActualizado = nuevoStock;
             return stockAjustable;
         }
     }

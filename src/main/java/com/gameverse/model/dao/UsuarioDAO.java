@@ -2,6 +2,7 @@ package com.gameverse.model.dao;
 
 import com.gameverse.config.DatabaseConfig;
 import com.gameverse.model.dto.Usuario;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Optional;
  * Permite listar, buscar por ID y registrar usuarios.
  * Utiliza DatabaseConfig para obtener conexiones.
  */
+@ApplicationScoped
 public class UsuarioDAO {
 
     /** Consulta todos los usuarios registrados en MySQL. */
@@ -47,17 +49,27 @@ public class UsuarioDAO {
     public int registrar(String nombre, String correo, String passwordHash) throws SQLException {
         String sql = "INSERT INTO usuarios (nombre, correo, password_hash) VALUES (?, ?, ?)";
 
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, nombre);
-            ps.setString(2, correo);
-            ps.setString(3, passwordHash);
-            ps.executeUpdate();
+        try {
+            try (Connection conn = DatabaseConfig.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, nombre);
+                ps.setString(2, correo);
+                ps.setString(3, passwordHash);
+                ps.executeUpdate();
 
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getInt(1);
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
             }
             throw new SQLException("No se pudo obtener el ID del usuario registrado.");
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062 && "23000".equals(e.getSQLState())) {
+                throw new SQLException("Ya existe un usuario registrado con ese correo.", e.getSQLState(),
+                        e.getErrorCode(), e);
+            }
+            throw e;
         }
     }
 

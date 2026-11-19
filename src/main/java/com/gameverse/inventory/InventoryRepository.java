@@ -16,4 +16,6 @@ public interface InventoryRepository {
     void eliminar(int id);
 
     boolean ajustarStock(int id, int cambio);
+
+    boolean actualizarStock(int id, int nuevoStock);
 }
