@@ -1,0 +1,159 @@
+/* Identidad visual compartida de los modulos */
+:root {
+    --fondo: #080a0f;
+    --panel: #141820;
+    --amarillo: #fcee0a;
+    --cian: #00d9ff;
+    --texto: #e5e7eb;
+}
+
+/* Fondo del catalogo: ambientacion Silent Hill */
+body.catalogo-page {
+    background:
+        linear-gradient(rgba(8,10,15,.80), rgba(8,10,15,.92)),
+        url("../img/catalogo-background.jpg")
+        center / cover fixed no-repeat,
+        #080a0f;
+    color: var(--texto);
+}
+
+/* Tarjetas generadas con los videojuegos de la base de datos */
+.catalogo-page .tarjeta {
+    background: rgba(20,24,32,.96);
+    border: 1px solid #34404e;
+    border-top: 2px solid var(--cian);
+    border-radius: 6px;
+}
+
+.catalogo-page .tarjeta:hover {
+    border-color: var(--amarillo);
+    box-shadow: 0 0 20px rgba(252,238,10,.12);
+}
+
+.catalogo-page .encabezado h1 {
+    color: var(--amarillo);
+    text-transform: uppercase;
+}
+
+.catalogo-page .precio {
+    color: var(--amarillo);
+}
+
+.catalogo-page .categoria {
+    background: #080a0f;
+    color: var(--cian);
+    border: 1px solid var(--cian);
+}
+
+.catalogo-page .sin-imagen,
+.catalogo-page .mensaje-vacio {
+    background: var(--panel);
+}
+
+.catalogo-page .volver,
+.catalogo-page .nuevo {
+    background: var(--amarillo);
+    color: #080a0f;
+}
+
+.catalogo-page .volver:hover,
+.catalogo-page .nuevo:hover {
+    background: var(--cian);
+}
+
+/* Fondo del inventario: ambientacion Metro */
+body.inventario-page {
+    background:
+        linear-gradient(rgba(8,10,15,.80), rgba(8,10,15,.92)),
+        url("../img/inventario-background.jpg")
+        center / cover fixed no-repeat,
+        #080a0f;
+    color: var(--texto);
+}
+
+/* Navegacion y marca del sistema */
+.inventario-page .barra-navegacion {
+    background: #090c12;
+    border-bottom: 1px solid var(--cian);
+}
+
+.inventario-page .marca {
+    color: var(--amarillo);
+}
+
+.inventario-page .marca span,
+.inventario-page .eyebrow,
+.inventario-page .barra-navegacion a:hover,
+.inventario-page .barra-navegacion a.activo {
+    color: var(--cian);
+}
+
+.inventario-page .insignia {
+    color: var(--cian);
+    border-color: var(--cian);
+}
+
+/* Paneles y tabla de inventario */
+.inventario-page .tarjeta,
+.inventario-page .panel {
+    background: rgba(20,24,32,.96);
+    border: 1px solid #34404e;
+    border-top: 2px solid var(--cian);
+    border-radius: 6px;
+}
+
+.inventario-page .acciones-superiores,
+.inventario-page .tabla-inventario,
+.inventario-page .campo-busqueda,
+.inventario-page .campo-formulario {
+    background: #080a0f;
+}
+
+.inventario-page .tabla-inventario th {
+    background: #202630;
+    color: var(--cian);
+}
+
+.inventario-page .tabla-inventario tr:hover td {
+    background: #1c2530;
+}
+
+/* Botones: conservar colores semanticos de las acciones */
+.inventario-page .boton {
+    background: var(--amarillo);
+    color: #080a0f;
+}
+
+.inventario-page .boton:hover {
+    background: var(--cian);
+}
+
+.inventario-page .boton-secundario {
+    background: #34404e;
+    color: white;
+}
+
+.inventario-page .boton-stock {
+    background: #0f766e;
+    color: white;
+}
+
+.inventario-page .boton-peligro {
+    background: #b91c1c;
+    color: white;
+}
+
+.inventario-page .boton-peligro:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.inventario-page .campo-busqueda:focus,
+.inventario-page .campo-formulario:focus {
+    outline-color: var(--cian);
+    border-color: var(--cian);
+}
+
+.inventario-page .pie-pagina {
+    background: #090c12;
+}

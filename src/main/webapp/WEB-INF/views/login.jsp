@@ -9,131 +9,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión - Gameverse</title>
 
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-    }
-
-    body {
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #101827, #253b63);
-        padding: 20px;
-    }
-
-    .login-container {
-        width: 100%;
-        max-width: 420px;
-        background: white;
-        padding: 35px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    h1 {
-        text-align: center;
-        color: #172554;
-        margin-bottom: 10px;
-    }
-
-    .subtitle {
-        text-align: center;
-        color: #64748b;
-        margin-bottom: 25px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 7px;
-        color: #334155;
-        font-weight: bold;
-    }
-
-    input {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 18px;
-        border: 1px solid #cbd5e1;
-        border-radius: 7px;
-        outline: none;
-    }
-
-    input:focus {
-        border-color: #2563eb;
-    }
-
-    button {
-        width: 100%;
-        padding: 13px;
-        background: #2563eb;
-        color: white;
-        border: none;
-        border-radius: 7px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background: #1d4ed8;
-    }
-
-    .error {
-        background: #fee2e2;
-        color: #b91c1c;
-        padding: 12px;
-        border-radius: 7px;
-        margin-bottom: 18px;
-        text-align: center;
-    }
-
-    .exito {
-        background: #dcfce7;
-        color: #166534;
-        padding: 12px;
-        border-radius: 7px;
-        margin-bottom: 18px;
-        text-align: center;
-    }
-
-    .registro {
-        text-align: center;
-        margin-top: 22px;
-        color: #475569;
-    }
-
-    .registro a,
-    .back {
-        color: #2563eb;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .registro a:hover,
-    .back:hover {
-        text-decoration: underline;
-    }
-
-    .back {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-    }
-</style>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/gameverse.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/auth.css">
 
 </head>
 
-<body>
+<body class="auth-page login-page">
 
-<div class="login-container">
+<div class="auth-panel">
 
-<h1>GAMEVERSE</h1>
-<p class="subtitle">Bienvenido de nuevo</p>
+<h1 class="logo">GAME<span>VERSE</span></h1>
+<p class="auth-subtitle">Bienvenido de nuevo</p>
 
 <c:if test="${not empty error}">
     <div class="error">
@@ -170,18 +56,18 @@
         autocomplete="current-password"
         required>
 
-    <button type="submit">Iniciar sesión</button>
+    <button type="submit" class="btn">Iniciar sesión</button>
 
 </form>
 
-<div class="registro">
+<div class="auth-links">
     ¿No tienes una cuenta?
     <a href="${pageContext.request.contextPath}/registro">
         Crear cuenta
     </a>
 </div>
 
-<a class="back" href="${pageContext.request.contextPath}/">
+<a class="auth-back" href="${pageContext.request.contextPath}/">
     Volver al inicio
 </a>
 

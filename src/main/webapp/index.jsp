@@ -1,257 +1,123 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gameverse | Tu próximo universo</title>
 
-    <title>Gameverse - Inicio</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: #111827;
-            color: white;
-            min-height: 100vh;
-        }
-
-        /* Barra superior */
-        header {
-            background: #1f2937;
-            padding: 20px 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #60a5fa;
-        }
-
-        .logo span {
-            color: white;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 25px;
-            font-size: 16px;
-        }
-
-        nav a:hover {
-            color: #60a5fa;
-        }
-
-        /* Contenido principal */
-        .hero {
-            text-align: center;
-            padding: 80px 20px 50px;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .hero h1 span {
-            color: #60a5fa;
-        }
-
-        .hero p {
-            font-size: 20px;
-            color: #d1d5db;
-            margin-bottom: 35px;
-        }
-
-        .btn {
-            display: inline-block;
-            background: #2563eb;
-            color: white;
-            padding: 14px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn:hover {
-            background: #1d4ed8;
-            transform: translateY(-2px);
-        }
-
-        /* Tarjetas */
-        .secciones {
-            max-width: 1000px;
-            margin: 20px auto 60px;
-            padding: 0 20px;
-
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: #1f2937;
-            padding: 30px 20px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-        }
-
-        .card .icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-        }
-
-        .card h2 {
-            margin-bottom: 10px;
-        }
-
-        .card p {
-            color: #9ca3af;
-            margin-bottom: 20px;
-        }
-
-        .card a {
-            color: #60a5fa;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .card a:hover {
-            text-decoration: underline;
-        }
-
-        /* Pie de página */
-        footer {
-            background: #0f172a;
-            text-align: center;
-            padding: 20px;
-            color: #9ca3af;
-        }
-    </style>
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/assets/css/gameverse.css">
 </head>
 
 <body>
 
 <header>
-
-    <div class="logo">
-        🎮 Game<span>verse</span>
-    </div>
-
-    <nav>
-        <a href="${pageContext.request.contextPath}/">Inicio</a>
-        <a href="${pageContext.request.contextPath}/catalogo">Catálogo</a>
-        <a href="${pageContext.request.contextPath}/inventario.xhtml">Inventario</a>
-    </nav>
-
-</header>
-
-
-<section class="hero">
-
-    <h1>Bienvenido a <span>Gameverse</span></h1>
-
-    <p>
-        Tu espacio para descubrir y disfrutar de los mejores videojuegos.
-    </p>
-
-    <a class="btn"
-       href="${pageContext.request.contextPath}/catalogo">
-        🎮 Ver catálogo
+    <a class="logo" href="${pageContext.request.contextPath}/">
+        GAME<span>VERSE</span>
     </a>
 
-</section>
+    <nav>
+    <a href="${pageContext.request.contextPath}/">Inicio</a>
+    <a href="${pageContext.request.contextPath}/catalogo">Catálogo</a>
+    <a href="${pageContext.request.contextPath}/#modulos">Módulos</a>
+    <a href="${pageContext.request.contextPath}/proximamente.jsp">Próximamente</a>
+    <a href="${pageContext.request.contextPath}/ofertas.jsp">Ofertas</a>
+    <a href="${pageContext.request.contextPath}/login">Iniciar sesión</a>
+</nav>
+</header>
 
+<main>
 
-<section class="secciones">
+    <!-- Presentacion principal -->
+    <section class="hero">
+        <div class="hero-content">
 
-    <div class="card">
+            <div class="eyebrow">BIENVENIDO A GAMEVERSE</div>
 
-        <div class="icon">🎮</div>
+            <h1>
+                Tu próximo <span>universo</span>
+                comienza aquí.
+            </h1>
 
-        <h2>Catálogo</h2>
+            <p>
+                Descubre nuevos mundos, explora nuestro catálogo
+                y encuentra tu próxima aventura.
+            </p>
 
-        <p>
-            Explora nuestro catálogo de videojuegos disponibles.
-        </p>
+            <a class="btn"
+               href="${pageContext.request.contextPath}/catalogo">
+                EXPLORAR CATÁLOGO
+            </a>
 
-        <a href="${pageContext.request.contextPath}/catalogo">
-            Ver catálogo →
-        </a>
+        </div>
+    </section>
 
-    </div>
+    <!-- Modulos del sistema -->
+    <section class="seccion" id="modulos">
 
+        <h2 class="section-title">Explora Gameverse</h2>
 
-    <div class="card">
+        <div class="secciones">
 
-        <div class="icon">👤</div>
+            <article class="card">
+                <div class="icon">🎮</div>
+                <h2>Catálogo</h2>
+                <p>Descubre los videojuegos disponibles.</p>
+                <a href="${pageContext.request.contextPath}/catalogo">
+                    Explorar catálogo →
+                </a>
+            </article>
 
-        <h2>Usuarios</h2>
+            <article class="card">
+                <div class="icon">👤</div>
+                <h2>Usuarios</h2>
+                <p>Administración de usuarios y cuentas.</p>
+                <span class="pendiente">En desarrollo</span>
+            </article>
 
-        <p>
-            Gestión de usuarios del sistema.
-        </p>
+            <article class="card">
+                <div class="icon">📦</div>
+                <h2>Inventario</h2>
+                <p>Control de videojuegos y existencias.</p>
+                <a href="${pageContext.request.contextPath}/inventario.xhtml">
+                    Abrir inventario →
+                </a>
+            </article>
 
-        <a href="#">
-            Próximamente
-        </a>
+            <article class="card">
+                <div class="icon">🛒</div>
+                <h2>Compras</h2>
+                <p>Gestiona tus compras y pedidos.</p>
+                <span class="pendiente">En desarrollo</span>
+            </article>
 
-    </div>
+        </div>
 
+    </section>
 
-    <div class="card">
+    <!-- Presentacion de proximos lanzamientos -->
+    <section class="proximamente" id="proximamente">
 
-        <div class="icon">📦</div>
+        <div>
+            <div class="eyebrow">PRÓXIMAMENTE EN GAMEVERSE</div>
 
-        <h2>Inventario</h2>
+            <h2>Una nueva aventura te espera.</h2>
 
-        <p>
-            Control y administración del inventario.
-        </p>
+            <p>
+                Nuevos mundos, nuevas historias y experiencias
+                que estarán por llegar a nuestro universo.
+            </p>
 
-        <a href="${pageContext.request.contextPath}/inventario.xhtml">
-            Abrir inventario →
-        </a>
+            <a class="btn" href="${pageContext.request.contextPath}/proximamente.jsp">VER PRÓXIMOS LANZAMIENTOS</a>
+        </div>
 
-    </div>
+    </section>
 
-
-    <div class="card">
-
-        <div class="icon">🛒</div>
-
-        <h2>Compras</h2>
-
-        <p>
-            Gestiona las compras y pedidos de videojuegos.
-        </p>
-
-        <a href="#">
-            Próximamente
-        </a>
-
-    </div>
-
-</section>
-
+</main>
 
 <footer>
-
-    © 2026 Gameverse - Sistema de gestión de videojuegos
-
+    <p>© 2026 Gameverse | Todos los derechos reservados.</p>
 </footer>
 
 </body>

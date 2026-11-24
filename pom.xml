@@ -6,18 +6,59 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Identificacion del proyecto Gameverse -->
     <groupId>com.gameverse</groupId>
     <artifactId>gameverse</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!-- Empaquetado para desplegar en Tomcat -->
     <packaging>war</packaging>
 
     <properties>
         <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- FASE 4: Version centralizada de Spring Framework -->
+        <spring.version>6.2.11</spring.version>
     </properties>
 
     <dependencies>
+
+        <!-- ========================================== -->
+        <!-- FASE 4: INTEGRACION CON SPRING              -->
+        <!-- ========================================== -->
+
+        <!-- Spring Context: inyeccion de dependencias -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- Spring MVC: controladores y arquitectura web -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- Spring JDBC: acceso a la base de datos -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- Spring TX: manejo de transacciones -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- ========================================== -->
+        <!-- DEPENDENCIAS DE LAS FASES ANTERIORES         -->
+        <!-- ========================================== -->
 
         <!-- Jakarta Servlet -->
         <dependency>
@@ -56,30 +97,36 @@
             <version>9.4.0</version>
         </dependency>
 
-        <!-- Jakarta Faces and CDI for JSF controllers on Tomcat -->
+        <!-- Jakarta Faces: interfaces JSF -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.faces</artifactId>
             <version>4.0.27</version>
         </dependency>
+
+        <!-- CDI: inyeccion de dependencias existente -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>jakarta.inject</groupId>
             <artifactId>jakarta.inject-api</artifactId>
             <version>2.0.1</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
             <version>2.1.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Weld CDI: soporte para Tomcat -->
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-shaded</artifactId>
@@ -87,6 +134,7 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- JUnit: pruebas unitarias -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -94,25 +142,26 @@
             <scope>test</scope>
         </dependency>
 
-            <!-- Hibernate ORM / JPA -->
+        <!-- Hibernate ORM / JPA: persistencia -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>6.6.58.Final</version>
         </dependency>
 
-        <!-- JSON para la API REST -->
+        <!-- Jackson: manejo de JSON para la API REST -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.16.1</version>
         </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
 
-            <!-- Compilaci├│n con el runtime LTS objetivo -->
+            <!-- Compilacion con Java 25 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -122,7 +171,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Generaci├│n del WAR -->
+            <!-- Generacion del archivo WAR para Tomcat -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -137,4 +186,3 @@
     </build>
 
 </project>
-

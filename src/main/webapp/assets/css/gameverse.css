@@ -1,0 +1,257 @@
+/* Identidad visual general de Gameverse */
+:root {
+    --fondo: #080a0f;
+    --panel: #141820;
+    --amarillo: #fcee0a;
+    --cian: #00d9ff;
+    --texto: #e5e7eb;
+    --secundario: #9ca3af;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Barra de navegacion */
+header {
+    background: #090c12;
+    border-bottom: 1px solid var(--cian);
+    padding: 20px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--amarillo);
+}
+
+.logo span {
+    color: var(--cian);
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 25px;
+}
+
+nav a {
+    font-weight: 600;
+    transition: color .25s;
+}
+
+nav a:hover {
+    color: var(--cian);
+}
+
+/* Imagen principal */
+.hero {
+    min-height: 540px;
+    display: flex;
+    align-items: center;
+    padding: 70px 7%;
+    background:
+        linear-gradient(90deg,
+        rgba(8,10,15,.94),
+        rgba(8,10,15,.25)),
+        linear-gradient(0deg,
+        #080a0f, transparent 35%),
+        url("../img/hero-gameverse.jpg")
+        center center / cover no-repeat;
+}
+
+.hero-content {
+    max-width: 650px;
+}
+
+.eyebrow {
+    color: var(--cian);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(36px, 5vw, 68px);
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+}
+
+.hero h1 span {
+    color: var(--amarillo);
+}
+
+.hero p {
+    font-size: 18px;
+    color: var(--texto);
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    background: var(--amarillo);
+    color: #080a0f;
+    padding: 14px 28px;
+    font-weight: 800;
+    border: 1px solid var(--amarillo);
+    clip-path: polygon(0 0, 100% 0,
+        100% 75%, 94% 100%, 0 100%);
+    transition: .25s;
+}
+
+.btn:hover {
+    background: var(--cian);
+    border-color: var(--cian);
+    transform: translateY(-3px);
+}
+
+/* Modulos principales */
+.seccion {
+    max-width: 1400px;
+    margin: auto;
+    padding: 45px 5%;
+}
+
+.section-title {
+    font-size: 27px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-left: 4px solid var(--amarillo);
+    padding-left: 15px;
+    margin-bottom: 30px;
+}
+
+.secciones {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+}
+
+.card {
+    background: var(--panel);
+    border: 1px solid #29313d;
+    border-top: 2px solid var(--cian);
+    padding: 30px 22px;
+    transition: .3s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    border-color: var(--amarillo);
+    box-shadow: 0 0 20px rgba(252,238,10,.12);
+}
+
+.card .icon {
+    font-size: 36px;
+    margin-bottom: 18px;
+}
+
+.card h2 {
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+.card p {
+    color: var(--secundario);
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.card a {
+    color: var(--cian);
+    font-weight: 700;
+}
+
+.card a:hover {
+    color: var(--amarillo);
+}
+
+.card .pendiente {
+    color: var(--secundario);
+}
+
+/* Proximos lanzamientos */
+.proximamente {
+    min-height: 420px;
+    margin: 30px 5% 65px;
+    padding: 55px 6%;
+    display: flex;
+    align-items: center;
+    border: 1px solid #34303a;
+    background:
+        linear-gradient(90deg,
+        rgba(8,10,15,.93),
+        rgba(8,10,15,.15)),
+        url("../img/proximamente.jpg")
+        center center / cover no-repeat;
+}
+
+.proximamente h2 {
+    font-size: clamp(30px, 4vw, 52px);
+    max-width: 550px;
+    margin-bottom: 20px;
+}
+
+.proximamente p {
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+footer {
+    background: #090c12;
+    border-top: 1px solid #29313d;
+    text-align: center;
+    padding: 28px;
+    color: var(--secundario);
+}
+
+/* Adaptacion a dispositivos */
+@media (max-width: 1000px) {
+    .secciones {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .secciones {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        min-height: 460px;
+    }
+
+    nav {
+        gap: 15px;
+    }
+
+    .proximamente {
+        min-height: 350px;
+    }
+}

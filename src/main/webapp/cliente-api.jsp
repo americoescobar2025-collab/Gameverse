@@ -70,24 +70,24 @@
         const text = await response.text();
         let data = null;
         if (text) { try { data=JSON.parse(text); } catch { throw new Error('El servidor no devolvió una respuesta JSON válida.'); } }
-        if (!response.ok) throw new Error(data?.message || `Error HTTP ${response.status}`);
+        if (!response.ok) throw new Error(data?.message || `Error HTTP \${response.status}`);
         return data;
     }
     function setConnection(ok, message) { $('statusDot').className='dot '+(ok?'ok':'bad'); $('apiStatus').textContent=message; }
     function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function render() {
         const term=$('search').value.trim().toLowerCase();
-        const filtered=games.filter(g => `${g.titulo} ${g.categoria} ${g.id}`.toLowerCase().includes(term));
+        const filtered=games.filter(g => `\${g.titulo} \${g.categoria} \${g.id}`.toLowerCase().includes(term));
         $('gamesBody').innerHTML = filtered.length ? filtered.map(g => `<tr>
-            <td>${g.id}</td><td><strong>${escapeHtml(g.titulo)}</strong><br><span class="muted">${escapeHtml(g.categoria||'Sin categoría')}</span></td>
-            <td>$${Number(g.precio).toFixed(2)}</td><td>${g.stock}</td><td><div class="row-actions">
-            <button class="small secondary" data-action="view" data-id="${g.id}">Ver</button><button class="small" data-action="edit" data-id="${g.id}">Editar</button>
-            <button class="small secondary" data-action="minus" data-id="${g.id}" ${g.stock<=0?'disabled':''}>−1</button><button class="small secondary" data-action="plus" data-id="${g.id}">+1</button>
-            <button class="small danger" data-action="delete" data-id="${g.id}">Eliminar</button></div></td></tr>`).join('') : '<tr><td colspan="5" class="empty">No hay videojuegos que coincidan con la búsqueda.</td></tr>';
+            <td>\${g.id}</td><td><strong>\${escapeHtml(g.titulo)}</strong><br><span class="muted">\${escapeHtml(g.categoria||'Sin categoría')}</span></td>
+            <td>$\${Number(g.precio).toFixed(2)}</td><td>\${g.stock}</td><td><div class="row-actions">
+            <button class="small secondary" data-action="view" data-id="\${g.id}">Ver</button><button class="small" data-action="edit" data-id="\${g.id}">Editar</button>
+            <button class="small secondary" data-action="minus" data-id="\${g.id}" \${g.stock<=0?'disabled':''}>−1</button><button class="small secondary" data-action="plus" data-id="\${g.id}">+1</button>
+            <button class="small danger" data-action="delete" data-id="\${g.id}">Eliminar</button></div></td></tr>`).join('') : '<tr><td colspan="5" class="empty">No hay videojuegos que coincidan con la búsqueda.</td></tr>';
     }
     async function loadGames(showMessage=false) {
-        try { games=await request(API); setConnection(true,`API REST conectada · ${games.length} videojuego(s) recibidos`); render(); if(showMessage) notice('Inventario actualizado desde la API REST.'); }
-        catch(e) { setConnection(false,'No se pudo conectar con la API REST'); $('gamesBody').innerHTML=`<tr><td colspan="5" class="empty">${escapeHtml(e.message)}. Verifica que Tomcat esté iniciado y que la API esté desplegada.</td></tr>`; if(showMessage) notice(e.message,'error'); }
+        try { games=await request(API); setConnection(true,`API REST conectada · \${games.length} videojuego(s) recibidos`); render(); if(showMessage) notice('Inventario actualizado desde la API REST.'); }
+        catch(e) { setConnection(false,'No se pudo conectar con la API REST'); $('gamesBody').innerHTML=`<tr><td colspan="5" class="empty">\${escapeHtml(e.message)}. Verifica que Tomcat esté iniciado y que la API esté desplegada.</td></tr>`; if(showMessage) notice(e.message,'error'); }
     }
     function resetForm() { $('gameForm').reset(); $('gameId').value=''; $('formTitle').textContent='Registrar videojuego'; $('saveButton').textContent='Guardar videojuego'; $('cancelButton').hidden=true; }
     function fillForm(g) { $('gameId').value=g.id; $('titulo').value=g.titulo||''; $('descripcion').value=g.descripcion||''; $('precio').value=g.precio; $('stock').value=g.stock; $('categoria').value=g.categoria||''; $('imagenUrl').value=g.imagenUrl||''; $('formTitle').textContent='Editar videojuego #'+g.id; $('saveButton').textContent='Guardar cambios'; $('cancelButton').hidden=false; $('titulo').focus(); }
@@ -95,17 +95,17 @@
         e.preventDefault(); clearNotice();
         const id=$('gameId').value;
         const payload={titulo:$('titulo').value.trim(),descripcion:$('descripcion').value.trim(),precio:Number($('precio').value),stock:Number($('stock').value),categoria:$('categoria').value.trim(),imagenUrl:$('imagenUrl').value.trim()||null};
-        try { await request(id?`${API}/${id}`:API,{method:id?'PUT':'POST',body:JSON.stringify(payload)}); notice(id?'Videojuego actualizado correctamente mediante PUT.':'Videojuego registrado correctamente mediante POST.'); resetForm(); await loadGames(); }
+        try { await request(id?`\${API}/\${id}`:API,{method:id?'PUT':'POST',body:JSON.stringify(payload)}); notice(id?'Videojuego actualizado correctamente mediante PUT.':'Videojuego registrado correctamente mediante POST.'); resetForm(); await loadGames(); }
         catch(err) { notice(err.message,'error'); }
     });
     $('gamesBody').addEventListener('click', async e => {
         const button=e.target.closest('button[data-action]'); if(!button) return;
         const id=Number(button.dataset.id), action=button.dataset.action;
         try {
-            if(action==='view') { const g=await request(`${API}/${id}`); notice(`GET ${API}/${id}: ${g.titulo} · ${g.categoria} · $${Number(g.precio).toFixed(2)} · Stock: ${g.stock}`); }
-            if(action==='edit') { const g=await request(`${API}/${id}`); fillForm(g); clearNotice(); }
-            if(action==='plus'||action==='minus') { const delta=action==='plus'?1:-1; await request(`${API}/${id}/stock`,{method:'PATCH',body:JSON.stringify({cambio:delta})}); notice(`Stock del videojuego #${id} ajustado mediante PATCH (${delta>0?'+':''}${delta}).`); await loadGames(); }
-            if(action==='delete' && confirm(`¿Seguro que deseas eliminar el videojuego #${id}?`)) { await request(`${API}/${id}`,{method:'DELETE'}); notice(`Videojuego #${id} eliminado mediante DELETE.`); if($('gameId').value===String(id)) resetForm(); await loadGames(); }
+            if(action==='view') { const g=await request(`\${API}/\${id}`); notice(`GET \${API}/\${id}: \${g.titulo} · \${g.categoria} · $\${Number(g.precio).toFixed(2)} · Stock: \${g.stock}`); }
+            if(action==='edit') { const g=await request(`\${API}/\${id}`); fillForm(g); clearNotice(); }
+            if(action==='plus'||action==='minus') { const delta=action==='plus'?1:-1; await request(`\${API}/\${id}/stock`,{method:'PATCH',body:JSON.stringify({cambio:delta})}); notice(`Stock del videojuego #\${id} ajustado mediante PATCH (\${delta>0?'+':''}\${delta}).`); await loadGames(); }
+            if(action==='delete' && confirm(`¿Seguro que deseas eliminar el videojuego #\${id}?`)) { await request(`\${API}/\${id}`,{method:'DELETE'}); notice(`Videojuego #\${id} eliminado mediante DELETE.`); if($('gameId').value===String(id)) resetForm(); await loadGames(); }
         } catch(err) { notice(err.message,'error'); }
     });
     $('reloadButton').addEventListener('click',()=>loadGames(true)); $('search').addEventListener('input',render); $('cancelButton').addEventListener('click',resetForm);

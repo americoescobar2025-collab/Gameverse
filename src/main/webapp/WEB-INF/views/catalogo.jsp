@@ -198,9 +198,10 @@
             }
         }
     </style>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/modulos.css">
 </head>
 
-<body>
+<body class="catalogo-page">
 
 <div class="contenedor">
 
